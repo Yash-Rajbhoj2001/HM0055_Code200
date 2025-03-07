@@ -27,6 +27,8 @@ const Account = () => {
         confirmPassword: '',
         specialisation: '',
         degree: '',
+        age:'',
+        gender:'',
         hospitalId: '', // Added hospital ID field
     });
 
@@ -219,6 +221,7 @@ const Account = () => {
                         hospitalId: formData.hospitalId, // Save hospital ID with doctor data
                         RecentPatients: [],
                         age: formData.age,
+                        gender:formData.gender,
                         Ratting: [0, 0],
                     };
 
@@ -260,6 +263,7 @@ const Account = () => {
                         lastname: formData.lastname,
                         email: formData.email,
                         age:formData.age,
+                        gender:formData.gender,
                         contact: formData.contact,
                         disease: diseaselist,
                         appointments: [],
@@ -356,6 +360,14 @@ const Account = () => {
                                             <input type='number' placeholder='Age' name='age' onChange={handleChange} required />
                                         </div>
                                         <div className='input-container'>
+                                            <label>Gender</label>
+                                            <select name='gender' onChange={handleChange}>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div className='input-container'>
                                             <label>Password*</label>
                                             <input type='text' placeholder='Password' name='password' onChange={handleChange} required />
                                         </div>
@@ -450,6 +462,14 @@ const Account = () => {
                                         <div className='input-container'>
                                             <label>Age*</label>
                                             <input type='number' placeholder='Age' name='age' onChange={handleChange} required />
+                                        </div>
+                                        <div className='input-container'>
+                                            <label>Gender</label>
+                                            <select name='gender' onChange={handleChange}>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
                                         </div>
                                         <div className='input-container'>
                                             <label>Password*</label>
