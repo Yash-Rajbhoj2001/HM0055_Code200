@@ -779,7 +779,7 @@ const displayErrorNotification = (message) => {
                   <th>Condition</th>
                   <th>Last Maintenance</th>
                   <th>Next Maintenance</th>
-                  <th>Actions</th>
+                  <th>Request Resource</th>
                 </tr>
               </thead>
               <tbody>
