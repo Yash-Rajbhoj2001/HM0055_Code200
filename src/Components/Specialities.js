@@ -4,6 +4,8 @@ import db from '../firebase';
 import '../Styles/Specialities.css';
 
 const specialties = [
+  { name: "Cancer", image: require('../Assets/cancer.png') },
+  { name: "Dental", image: require('../Assets/tooth.png') },
   { name: "General Physician", image: require('../Assets/general Physician.png') },
   { name: "Dermatology", image: require('../Assets/dry-skin-dermatology.png') },
   { name: "Obstetrics & Gynaecology", image: require('../Assets/checkup-obstetrics.png') },
@@ -16,8 +18,6 @@ const specialties = [
   { name: "Psychiatry", image: require('../Assets/psychiatry.png') },
   { name: "Paediatrics", image: require('../Assets/paedritics.png') },
   { name: "Pulmonology", image: require('../Assets/pulmonology.png') },
-  { name: "Cancer", image: require('../Assets/cancer.png') },
-  { name: "Dental", image: require('../Assets/tooth.png') },
 ];
 
 const SpecialtiesPage = () => {
@@ -331,7 +331,7 @@ const SpecialtiesPage = () => {
     <div className="app-container">
       {!selectedSpecialty ? (
         <div className="container">
-          <h1 className="heading">Browse by Specialties</h1>
+          <h1 className="heading">Browse By Specialties</h1>
           <div className="grid">
             {specialties.map((specialty, index) => (
               <div key={index} className="specialty-card" onClick={() => handleSpecialtyClick(specialty.name)}>
