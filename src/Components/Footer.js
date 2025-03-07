@@ -14,6 +14,15 @@ const Footer = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Ensures footer updates immediately after login/logout
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUserType(localStorage.getItem('userType'));
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleProfileClick = () => {
     const email = localStorage.getItem('userEmail');
     if (userType === 'doctor') {
@@ -54,7 +63,7 @@ const Footer = () => {
           <h3 className="footer-heading">Contact Us</h3>
           <ul className="footer-contact">
             <li>📞 +91 123 456 7890</li>
-            <li>✉️ info@healthcaremanagement.com</li>
+            <li>✉️ Email us at support@medilog.com</li>
             <li>📍 123 Main Street, Mumbai, India</li>
           </ul>
         </div>

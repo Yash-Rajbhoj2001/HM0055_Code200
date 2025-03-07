@@ -202,7 +202,7 @@ body {
 
 .input-container input,
 .input-container select {
-  padding: 0.75rem 1rem;
+  padding: 0.65rem;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-size: 1rem;
@@ -256,7 +256,6 @@ body {
 }
 
 .add-disease button {
-  padding: 0.75rem 1.25rem;
   background-color: #10b981;
   color: white;
   border: none;
@@ -428,9 +427,3 @@ body::before {
 }
 
 /* Warning Message Styling */
-.register-div p {
-  background-color: rgba(239, 68, 68, 0.1);
-  border-left: 3px solid #ef4444;
-  padding: 0.75rem;
-  border-radius: 0 4px 4px 0;
-}

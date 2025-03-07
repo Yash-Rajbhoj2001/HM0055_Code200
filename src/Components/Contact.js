@@ -113,7 +113,7 @@ const Contact = () => {
             >
               <span className="icon">📍</span>
               <h3>Visit Us</h3>
-              <p>1234 Health St, Medical City, USA</p>
+              <p> 📍123 Main Street, Mumbai,India</p>
             </motion.div>
           </div>
         </div>
