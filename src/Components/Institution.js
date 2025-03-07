@@ -87,6 +87,7 @@ const Institute = () => {
             setHospitalData(snapshot.val());
             // Call this function when needed (e.g., on dashboard load)
             checkStockAndPredict(); 
+            checkEquipmentAndPredict();
           } else {
             setError("Hospital not found");
             navigate("/");
@@ -265,7 +266,7 @@ const Institute = () => {
       if (!snapshot.exists()) {
         console.warn("No resource data available.");
         setPredictedResources([]); // Set to empty array if no data
-        return;
+        return null;
       }
   
       const resourcesData = snapshot.val();
@@ -274,96 +275,124 @@ const Institute = () => {
       let resourceUsage = [];
   
       for (const [resourceId, data] of Object.entries(resourcesData)) {
-        if (!data.dateAdded || !data.quantity || !data.condition) {
-          console.warn(`Missing data for resource ${resourceId}`);
+        if (!data.name || !data.quantity) {
+          console.warn(`Missing required data for resource ${resourceId}`);
           continue;
         }
   
-        const addedDate = new Date(data.dateAdded);
+        // Use default values for missing data points
+        const addedDate = data.dateAdded ? new Date(data.dateAdded) : new Date(currentDate - 30*24*60*60*1000); // Default to 30 days ago
         const daysPassed = Math.max((currentDate - addedDate) / (1000 * 60 * 60 * 24), 1);
-        const dailyUsage = data.quantity / daysPassed; // Simplified usage calculation
+        
+        // Simplified usage calculation with fallback values
+        const dailyUsage = 1; // Default daily usage assumption
   
         resourceUsage.push({
           id: resourceId,
           name: data.name,
           dailyUsage: dailyUsage.toFixed(2),
           remainingQuantity: data.quantity,
-          condition: data.condition,
+          condition: data.condition || "Good"
         });
       }
   
       if (resourceUsage.length === 0) {
         console.warn("No valid resource usage data available.");
         setPredictedResources([]); // Set to empty array if no valid data
-        return;
+        return null;
       }
   
-      // **Improved AI Prompt**
-      const aiPrompt = `
-      Analyze the medical equipment and resource usage trends and predict future demand for the next 30 days.
-      Ensure the response is **strictly** valid JSON with this structure:
-      {
-          "predictions": [
-              { "resource": "Resource Name", "predictedQuantity": 50 },
-              { "resource": "Another Resource", "predictedQuantity": 20 }
-          ]
-      }
-      Do not include any explanations or extra text.
-      Here is the resource usage data:
-      ${JSON.stringify(resourceUsage, null, 2)}
-      `;
+      // Create fallback predictions directly if no valid usage data
+      const generatedPredictions = {
+        predictions: resourceUsage.map((res) => ({
+          resource: res.name,
+          predictedQuantity: Math.max(Math.ceil(res.dailyUsage * 30), 1)
+        }))
+      };
   
-      // Call Google Gemini API
-      const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBMuRcsjTaJXsZ01MtRZh8yHtVXmUuMSw",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: aiPrompt }] }]
-          })
-        }
-      );
-  
-      const data = await response.json();
-      if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-        throw new Error("No prediction received from Gemini.");
-      }
-  
-      // **Ensure Safe JSON Parsing**
-      let rawResponse = data.candidates[0].content.parts[0].text;
-  
-      // **Fix Possible Invalid Formatting**
-      rawResponse = rawResponse.replace(/```json|```/g, '').trim(); // Remove Markdown JSON formatting if present
-  
-      let predictedResources;
       try {
-        predictedResources = JSON.parse(rawResponse);
-      } catch (jsonError) {
-        console.error("Invalid JSON response from Gemini:", rawResponse);
-        throw new Error("Gemini response is not valid JSON.");
+        // **Simplified AI Prompt**
+        const aiPrompt = `
+        Analyze this medical equipment data and predict quantities needed for 30 days.
+        Return only valid JSON in this format:
+        {"predictions":[{"resource":"Name","predictedQuantity":50}]}
+        Data: ${JSON.stringify(resourceUsage, null, 2)}
+        `;
+  
+        // Add timeout to the fetch request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+  
+        // Call Google Gemini API with timeout
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBMuRcsjTaJXsZ01MtRZh8yHtVXmUuMSw",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ role: "user", parts: [{ text: aiPrompt }] }]
+            }),
+            signal: controller.signal
+          }
+        );
+  
+        clearTimeout(timeoutId);
+  
+        if (!response.ok) {
+          throw new Error(`API response not OK: ${response.status} ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        
+        // Check if we have a valid response structure
+        if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          console.warn("Incomplete response from Gemini, using fallback predictions");
+          throw new Error("Invalid response structure from Gemini");
+        }
+  
+        // **Parse the response more carefully**
+        let rawResponse = data.candidates[0].content.parts[0].text;
+        rawResponse = rawResponse.replace(/```json|```/g, '').trim();
+  
+        // More robust JSON extraction (find the first { and last })
+        const jsonStartIndex = rawResponse.indexOf('{');
+        const jsonEndIndex = rawResponse.lastIndexOf('}') + 1;
+        
+        if (jsonStartIndex === -1 || jsonEndIndex === 0) {
+          throw new Error("Cannot find valid JSON in response");
+        }
+        
+        const jsonString = rawResponse.substring(jsonStartIndex, jsonEndIndex);
+        let predictedResources = JSON.parse(jsonString);
+  
+        // Validate the structure
+        if (!predictedResources.predictions || !Array.isArray(predictedResources.predictions)) {
+          throw new Error("Response missing predictions array");
+        }
+  
+        // Store predictions in Firebase
+        const predictedRef = ref(db, `Hospital/${hospitalCode}/PredictedResources`);
+        await set(predictedRef, predictedResources);
+  
+        // Update state with predicted resources
+        setPredictedResources(predictedResources.predictions);
+  
+        console.log("Predicted resources updated:", predictedResources);
+        return predictedResources;
+  
+      } catch (apiError) {
+        console.warn("Error with Gemini API, using fallback predictions:", apiError);
+        
+        // Store fallback predictions in Firebase
+        const predictedRef = ref(db, `Hospital/${hospitalCode}/PredictedResources`);
+        await set(predictedRef, generatedPredictions);
+        
+        // Update state with fallback predictions
+        setPredictedResources(generatedPredictions.predictions);
+        
+        console.log("Using fallback predictions:", generatedPredictions);
+        return generatedPredictions;
       }
-  
-      // **Fallback: Ensure Predictions Exist**
-      if (!predictedResources.predictions || predictedResources.predictions.length === 0) {
-        console.warn("No valid predictions from Gemini. Generating fallback predictions.");
-        predictedResources = {
-          predictions: resourceUsage.map((res) => ({
-            resource: res.name,
-            predictedQuantity: Math.max(Math.ceil(res.dailyUsage * 30), 1), // Rough estimate
-          })),
-        };
-      }
-  
-      // Store predictions in Firebase
-      const predictedRef = ref(db, `Hospital/${hospitalCode}/PredictedResources`);
-      await set(predictedRef, predictedResources);
-  
-      // Update state with predicted resources
-      setPredictedResources(predictedResources.predictions);
-  
-      console.log("Predicted resources updated:", predictedResources);
-      return predictedResources;
   
     } catch (error) {
       console.error("Error predicting resource demand:", error);
@@ -372,27 +401,81 @@ const Institute = () => {
     }
   };
 
-  const checkEquipmentAndPredict = async () => {
-    const inscode = localStorage.getItem("inscode");
+// Implement exponential backoff for API calls
+const callWithBackoff = async (apiFunction, params, maxRetries = 3) => {
+  let retries = 0;
+  while (retries < maxRetries) {
+    try {
+      return await apiFunction(params);
+    } catch (error) {
+      if (error.message.includes('429') || error.message.includes('Too Many Requests')) {
+        retries++;
+        // Exponential backoff: wait longer with each retry
+        const delay = 2 ** retries * 1000;
+        console.log(`Rate limited. Retrying in ${delay}ms (${retries}/${maxRetries})`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        throw error; // If it's not a rate limit error, pass it up
+      }
+    }
+  }
+  throw new Error("Maximum retries exceeded for API call");
+};
+
+// Modified check function with better error handling
+const checkEquipmentAndPredict = async () => {
+  const inscode = localStorage.getItem("inscode");
+  try {
+    // Use a queue system by running predictions sequentially
+    // First predict medicines
+    try {
+      const medicinePredictions = await callWithBackoff(predictMedicineDemand, inscode);
+      if (medicinePredictions) {
+        const lowStockMedicines = Object.entries(medicinePredictions)
+          .filter(([_, qty]) => qty < 5);
+        
+        if (lowStockMedicines.length > 0) {
+          // Use a more graceful notification system instead of alerts
+          displayNotification(`Low stock alert for: ${lowStockMedicines.map(([name]) => name).join(", ")}`);
+        }
+      }
+    } catch (error) {
+      console.error("Medicine prediction failed:", error);
+      // Continue with equipment prediction even if medicine prediction fails
+    }
     
-    // Predict medicine demand
-    const medicinePredictions = await predictMedicineDemand(inscode);
-    if (medicinePredictions) {
-      const lowStockMedicines = Object.entries(medicinePredictions).filter(([_, qty]) => qty < 5); // Example: Alert for low stock
-      if (lowStockMedicines.length > 0) {
-        alert(`⚠️ Low stock alert for: ${lowStockMedicines.map(([name]) => name).join(", ")}`);
+    // Then predict equipment
+    try {
+      const equipmentPredictions = await callWithBackoff(predictEquipmentDemand, inscode);
+      if (equipmentPredictions) {
+        const lowStockResources = Object.entries(equipmentPredictions)
+          .filter(([_, qty]) => qty < 5);
+        
+        if (lowStockResources.length > 0) {
+          displayNotification(`Low stock alert for resources: ${lowStockResources.map(([name]) => name).join(", ")}`);
+        }
       }
+    } catch (error) {
+      console.error("Equipment prediction failed:", error);
     }
-  
-    // Predict equipment demand
-    const equipmentPredictions = await predictEquipmentDemand(inscode);
-    if (equipmentPredictions) {
-      const lowStockResources = Object.entries(equipmentPredictions).filter(([_, qty]) => qty < 5); // Example: Alert for low stock
-      if (lowStockResources.length > 0) {
-        alert(`⚠️ Low stock alert for resources: ${lowStockResources.map(([name]) => name).join(", ")}`);
-      }
-    }
-  };
+  } catch (error) {
+    console.error("Error in prediction system:", error);
+    // Handle the error gracefully - perhaps show a small error notification
+    displayErrorNotification("Prediction system temporarily unavailable");
+  }
+};
+
+// Replace alerts with a more user-friendly notification system
+const displayNotification = (message) => {
+  // Implement a toast or in-app notification instead of alert
+  console.log("NOTIFICATION:", message);
+  // Example: toast.warning(message);
+};
+
+const displayErrorNotification = (message) => {
+  console.log("ERROR:", message);
+  // Example: toast.error(message);
+};
 
   // Handle adding a new resource
   const handleAddResource = async (e) => {
@@ -442,6 +525,9 @@ const Institute = () => {
     auth.signOut();
     navigate("/");
   };
+  const handleMarket =() => {
+    navigate('/Market');
+  }
 
   if (loading) {
     return (
@@ -460,6 +546,81 @@ const Institute = () => {
       </div>
     );
   }
+  const handleRequest = async (resourceName, predictedQuantity) => {
+    const inscode = localStorage.getItem("inscode");
+    if (!inscode) {
+      alert("Hospital code not found. Please log in again.");
+      return;
+    }
+  
+    try {
+      const requirementRef = ref(db, `Hospital/${inscode}/Requirement/${resourceName}`);
+      await set(requirementRef, {
+        name: resourceName,
+        quantity: predictedQuantity,
+        dateRequested: new Date().toISOString(),
+      });
+      alert(`Request for ${resourceName} added successfully!`);
+    } catch (error) {
+      console.error("Error adding request:", error);
+      alert("Failed to add request. Please try again.");
+    }
+  };
+
+  const handleDelete = async (resourceName) => {
+    const inscode = localStorage.getItem("inscode");
+    if (!inscode) {
+      alert("Hospital code not found. Please log in again.");
+      return;
+    }
+  
+    try {
+      const requirementRef = ref(db, `Hospital/${inscode}/Requirement/${resourceName}`);
+      await set(requirementRef, null); // Set to null to delete the entry
+      alert(`Request for ${resourceName} deleted successfully!`);
+    } catch (error) {
+      console.error("Error deleting request:", error);
+      alert("Failed to delete request. Please try again.");
+    }
+  };
+
+  const handleRequestMedicine = async (medicineName, predictedQuantity) => {
+    const inscode = localStorage.getItem("inscode");
+    if (!inscode) {
+      alert("Hospital code not found. Please log in again.");
+      return;
+    }
+  
+    try {
+      const requirementRef = ref(db, `Hospital/${inscode}/Requirement/${medicineName}`);
+      await set(requirementRef, {
+        name: medicineName,
+        quantity: predictedQuantity,
+        dateRequested: new Date().toISOString(),
+      });
+      alert(`Request for ${medicineName} added successfully!`);
+    } catch (error) {
+      console.error("Error adding medicine request:", error);
+      alert("Failed to add medicine request. Please try again.");
+    }
+  };
+
+  const handleDeleteMedicine = async (medicineName) => {
+    const inscode = localStorage.getItem("inscode");
+    if (!inscode) {
+      alert("Hospital code not found. Please log in again.");
+      return;
+    }
+  
+    try {
+      const requirementRef = ref(db, `Hospital/${inscode}/Requirement/${medicineName}`);
+      await set(requirementRef, null); // Set to null to delete the entry
+      alert(`Request for ${medicineName} deleted successfully!`);
+    } catch (error) {
+      console.error("Error deleting medicine request:", error);
+      alert("Failed to delete medicine request. Please try again.");
+    }
+  };
 
   return (
     <div className="institution-container">
@@ -475,6 +636,9 @@ const Institute = () => {
         <div>
         <button className="logout-button" onClick={handleLogout}>
             Logout
+        </button>
+        <button className="logout-button" onClick={handleMarket}>
+          Market
         </button>
         </div>
       </header>
@@ -663,26 +827,41 @@ const Institute = () => {
       <div className="ResourcePrediction">
           <div className="medicinePrediction">
               <div className="prediction-container">
-                <h2 className="prediction-title">📊Predicted Medicine Demand</h2>
+                <h2 className="prediction-title">Predicted Medicine Demand</h2>
                 {predictedStock.length === 0 ? (
                     <p className="text-gray-600 text-center">No predictions available.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="prediction-table">
-                            <thead>
-                                <tr>
-                                    <th>Medicine Name</th>
-                                    <th>Predicted Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {predictedStock.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.medicine}</td>
-                                        <td className="predicted-quantity">{item.predictedQuantity}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
+                          <thead>
+                            <tr>
+                              <th>Medicine Name</th>
+                              <th>Predicted Quantity</th>
+                              <th>Actions</th> {/* New column for buttons */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {predictedStock.map((item, index) => (
+                              <tr key={index}>
+                                <td>{item.medicine}</td>
+                                <td className="predicted-quantity">{item.predictedQuantity}</td>
+                                <td>
+                                  <button 
+                                    className="request-button"
+                                    onClick={() => handleRequestMedicine(item.medicine, item.predictedQuantity)}
+                                  >
+                                    Request
+                                  </button>
+                                  <button 
+                                    className="delete-button"
+                                    onClick={() => handleDeleteMedicine(item.medicine)}
+                                  >
+                                    Delete
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
                         </table>
                     </div>
                 )}
@@ -691,27 +870,42 @@ const Institute = () => {
       </div>
       <div className="resourcePrediction">
   <div className="prediction-container">
-    <h2 className="prediction-title">📊 Predicted Equipment Demand</h2>
+    <h2 className="prediction-title">Predicted Equipment Demand</h2>
     {predictedResources?.length === 0 ? ( // Use optional chaining
       <p className="text-gray-600 text-center">No predictions available.</p>
     ) : (
       <div className="overflow-x-auto">
         <table className="prediction-table">
-          <thead>
-            <tr>
-              <th>Resource Name</th>
-              <th>Predicted Quantity</th>
+        <thead>
+          <tr>
+            <th>Resource Name</th>
+            <th>Predicted Quantity</th>
+            <th>Actions</th> {/* New column for buttons */}
+          </tr>
+        </thead>
+        <tbody>
+          {(predictedResources || []).map((item, index) => (
+            <tr key={index}>
+              <td>{item.resource}</td>
+              <td className="predicted-quantity">{item.predictedQuantity}</td>
+              <td>
+                <button 
+                  className="request-button"
+                  onClick={() => handleRequest(item.resource, item.predictedQuantity)}
+                >
+                  Request
+                </button>
+                <button 
+                  className="delete-button"
+                  onClick={() => handleDelete(item.resource)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {(predictedResources || []).map((item, index) => ( // Fallback to empty array
-              <tr key={index}>
-                <td>{item.resource}</td>
-                <td className="predicted-quantity">{item.predictedQuantity}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
       </div>
     )}
   </div>

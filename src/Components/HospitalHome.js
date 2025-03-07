@@ -3,10 +3,9 @@ import { set, ref, get, child } from 'firebase/database';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import db, { auth } from '../firebase';
-import '../App.css'
+import '../App.css';
 import '../Styles/hospital.css';
 import Navbar from './Navbar';
-
 
 const HospitalHome = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -16,7 +15,30 @@ const HospitalHome = () => {
   const [hospitalName, setHospitalName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [locationError, setLocationError] = useState("");
   const navigate = useNavigate();
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setLocationError("");
+      },
+      (error) => {
+        setLocationError("Unable to retrieve your location.");
+        console.error("Error getting location:", error);
+      }
+    );
+  };
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -24,7 +46,7 @@ const HospitalHome = () => {
 
     if (isRegistering) {
       // Registration
-      if (!hospitalName || !phone || !email || !password) {
+      if (!hospitalName || !phone || !email || !password || !location.latitude || !location.longitude) {
         setError("All fields are required!");
         return;
       }
@@ -40,7 +62,11 @@ const HospitalHome = () => {
           phone,
           email,
           hospitalCode: uniqueCode,
-          uid: userCredential.user.uid
+          uid: userCredential.user.uid,
+          location: {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
         });
         
         // Navigate to Institute with hospital code in state
@@ -78,7 +104,7 @@ const HospitalHome = () => {
                 foundHospitalCode 
               } 
             });
-            localStorage.setItem('inscode',foundHospitalCode);
+            localStorage.setItem('inscode', foundHospitalCode);
           } else {
             setError("Hospital account not found.");
           }
@@ -142,7 +168,27 @@ const HospitalHome = () => {
               placeholder="Enter password"
             />
           </div>
-          
+
+          {isRegistering && (
+            <div className="form-group">
+              <label>Location</label>
+              <button
+                type="button"
+                onClick={getLocation}
+                className="location-button"
+              >
+                Get My Location
+              </button>
+              {location.latitude && location.longitude ? (
+                <p className="location-coordinates">
+                  Latitude: {location.latitude}, Longitude: {location.longitude}
+                </p>
+              ) : (
+                <p className="location-error">{locationError}</p>
+              )}
+            </div>
+          )}
+
           <button type="submit" className="auth-button">
             {isRegistering ? "Register" : "Login"}
           </button>

@@ -192,6 +192,36 @@ transform: translate(-50%, -50%) rotate(0deg);
 animation: rotateSquare 20s linear infinite;
 z-index: 1;
 }
+/* Location button styling */
+.location-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.location-button:hover {
+  background-color: #218838;
+}
+
+/* Location coordinates styling */
+.location-coordinates {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Location error styling */
+.location-error {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #dc3545;
+}
 
 @keyframes rotateSquare {
 from {
