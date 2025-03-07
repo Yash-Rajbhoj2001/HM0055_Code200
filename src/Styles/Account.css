@@ -191,6 +191,7 @@ body {
 
 .input-container {
   display: flex;
+  flex-direction: column;
 }
 
 .input-container label {
@@ -246,6 +247,7 @@ body {
 /* Disease Selection Styling */
 .add-disease {
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
 }
 
@@ -274,10 +276,14 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
-.disease-list div {
+.disease-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background-color: #dbeafe;
   color: #1e40af;
   padding: 0.5rem 0.75rem;
@@ -287,9 +293,20 @@ body {
   transition: all 0.3s ease;
 }
 
-.disease-list div:hover {
-  background-color: #bfdbfe; /* Darker blue on hover */
-  transform: translateY(-2px); /* Lift effect on hover */
+.disease-item button {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 0.5rem;
+}
+
+.disease-item button:hover {
+  background-color: rgba(239, 68, 68, 0.2);
 }
 
 /* Login/Register Toggle Link */
@@ -314,7 +331,26 @@ body {
 .register-div span a:hover {
   color: #4f46e5;
   text-decoration: underline;
-  transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Notification Styling */
+.error-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translatey(50%);
+  background-color: #ff3333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.error-notification.show {
+  opacity: 1;
 }
 
 /* Responsive Adjustments */
@@ -337,6 +373,10 @@ body {
   
   .account-div {
     padding: 1.5rem;
+  }
+  
+  .add-disease {
+    flex-direction: column;
   }
 }
 /* Add these to the existing CSS */
@@ -365,9 +405,32 @@ body::before {
   opacity: 0.5;
 }
 
+/* Add keyframes for animation */
+@keyframes particleMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
 /* Enhanced Hover Effects */
 .account-container {
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* Processing state styling */
+.login-form button:disabled,
+.register-form button:disabled {
+  background-color: #94a3b8;
+  cursor: wait;
+}
 
+/* Warning Message Styling */
+.register-div p {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid #ef4444;
+  padding: 0.75rem;
+  border-radius: 0 4px 4px 0;
+}
