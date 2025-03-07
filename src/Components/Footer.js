@@ -55,7 +55,7 @@ const Footer = () => {
           <h3 className="footer-heading">Contact Us</h3>
           <ul className="footer-contact">
             <li>📞 +91 123 456 7890</li>
-            <li>✉️ info@healthcaremanagement.com</li>
+            <li>✉️ Email us at support@medilog.com</li>
             <li>📍 123 Main Street, Mumbai, India</li>
           </ul>
         </div>
