@@ -1,0 +1,188 @@
+/* Market.css - Professional styling for Market component */
+
+/* Overall layout */
+.marketContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+  }
+  
+  /* Market header */
+  .marketHeader {
+    background: linear-gradient(135deg, #2a70c7, #1e5ba0);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .marketHeader p {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Loading and no data states */
+  .loading, .noData {
+    text-align: center;
+    padding: 30px;
+    color: #555;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+    font-size: 16px;
+  }
+  
+  .loading {
+    background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDBweCIgaGVpZ2h0PSI0MHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48c3R5bGU+QGtleWZyYW1lcyBzcGluIHswJSB7dHJhbnNmb3JtOiByb3RhdGUoMGRlZyk7fSAxMDAlIHt0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpO319IGNpcmNsZSB7YW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlO3RyYW5zZm9ybS1vcmlnaW46IDIwcHggMjBweDt9PC9zdHlsZT48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxOCIgc3Ryb2tlPSIjMmE3MGM3IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjgwIiBzdHJva2UtZGFzaG9mZnNldD0iNjAiPjwvY2lyY2xlPjwvc3ZnPg==') no-repeat center 20px;
+    padding-top: 70px;
+  }
+  
+  /* Hospital list container */
+  .hospitalList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  /* Hospital request card */
+  .hospitalRequest {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .hospitalRequest:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* Hospital header data */
+  .hospitalListData {
+    background-color: #f5f7fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eaeef3;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .hospitalListData p {
+    margin: 0 0 5px 0;
+  }
+  
+  .hospitalListData p:first-child {
+    font-weight: 500;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .hospitalListData p:nth-child(2) {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .distance {
+    display: inline-block;
+    background-color: #e8f0fe;
+    color: #2a70c7;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    align-self: flex-start;
+    margin-top: 5px !important;
+  }
+  
+  /* Requirements section header */
+  .requirementsHeader {
+    margin: 0px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #eaeef3;
+  }
+  
+  /* Requirements list */
+  .requirements {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eaeef3;
+    transition: background-color 0.2s;
+  }
+  
+  .requirements:hover {
+    background-color: #f9fafb;
+  }
+  
+  .requirements:last-child {
+    border-bottom: none;
+  }
+  
+  /* Requirement details */
+  .requirementDetails {
+    flex: 1;
+  }
+  
+  .requirementDetails p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .requirementDetails p strong {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  /* Grant button */
+  .requirements button {
+    background-color: #2a70c7;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 15px;
+    white-space: nowrap;
+  }
+  
+  .requirements button:hover {
+    background-color: #1e5ba0;
+  }
+  
+  .requirements button:active {
+    transform: translateY(1px);
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .hospitalList {
+      grid-template-columns: 1fr;
+    }
+    
+    .requirements {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .requirements button {
+      margin-left: 0;
+      margin-top: 10px;
+      align-self: flex-end;
+    }
+  }
