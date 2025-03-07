@@ -350,6 +350,10 @@ const Account = () => {
                                             <input type='number' placeholder='Phone No' name='contact' onChange={handleChange} required />
                                         </div>
                                         <div className='input-container'>
+                                            <label>Age*</label>
+                                            <input type='number' placeholder='Age' name='age' onChange={handleChange} required />
+                                        </div>
+                                        <div className='input-container'>
                                             <label>Password*</label>
                                             <input type='text' placeholder='Password' name='password' onChange={handleChange} required />
                                         </div>
@@ -440,6 +444,10 @@ const Account = () => {
                                         <div className='input-container'>
                                             <label>Phone No*</label>
                                             <input type='number' placeholder='Phone No' name='contact' onChange={handleChange} required />
+                                        </div>
+                                        <div className='input-container'>
+                                            <label>Age*</label>
+                                            <input type='number' placeholder='Age' name='age' onChange={handleChange} required />
                                         </div>
                                         <div className='input-container'>
                                             <label>Password*</label>

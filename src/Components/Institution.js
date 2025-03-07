@@ -631,7 +631,7 @@ const displayErrorNotification = (message) => {
         </div>
         <div className="institution-header-content">
           {/* <h1>{hospitalData?.hospitalName}</h1> */}
-          <h1>CHINTAMANI HOSPITAL</h1>
+          <h1>{hospitalData.hospitalName} Hospital</h1>
         </div>
         <div>
         <button className="logout-button" style={{marginRight:'20px'}}  onClick={handleLogout}>
