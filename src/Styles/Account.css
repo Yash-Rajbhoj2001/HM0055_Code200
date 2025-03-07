@@ -1,426 +1,269 @@
-/* Advanced and Modern Account.css */
+/* Account.css - Professional styling for healthcare portal */
 
-/* Full Page Background */
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background-attachment: fixed; /* Ensures the image stays fixed when scrolling */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Account Container */
+/* Main container */
 .account-container {
-  max-width: 1000px;
-  margin: 2rem auto;
-  background: rgba(255, 255, 255, 0.95); /* Adds a semi-transparent white background */
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
 }
 
-/* Optional: Add a semi-transparent overlay for better text visibility */
-.account-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1); /* Adjust the transparency as needed */
-  border-radius: 12px;
-  z-index: -1;
-}
-
-/* Account Type Selector */
+/* Account type selection */
 .chose-type {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaeaea;
 }
 
 .chose-type h2 {
-  color: #158bc7;
-  font-size: 1.75rem;
+  color: #2c3e50;
+  font-weight: 600;
   margin: 0;
-  font-weight: 700; /* Bold font */
+  font-size: 24px;
 }
 
 .chose-type a {
-  color: #158bc7;
+  color: #3498db;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 5px;
   transition: all 0.3s ease;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  background-color: #eff6ff;
-  border: 1px solid #0ea5e9; /* Added border */
 }
 
 .chose-type a:hover {
-  color: #fff; /* White text on hover */
-  background-color: #0ea5e9; /* Blue background on hover */
+  background-color: #3498db;
+  color: white;
 }
 
-/* Account Div (Container for Login/Register Forms) */
+/* Account div styling */
 .account-div {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* Login styling */
+.login-div, .register-div {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  border-radius: 8px;
   background-color: white;
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  padding: 2rem;
-  transition: all 0.3s ease; /* Smooth transitions */
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
 }
 
-.account-div:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+.login-div h3, .register-div h3 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-weight: 600;
+  font-size: 22px;
 }
 
-/* Login Form Styles */
-.login-div h3, 
-.register-div h3 {
-  color: #158bc7;
-  font-size: 1.5rem;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e2e8f0;
-  position: relative;
-}
-
-.login-div h3::after,
-.register-div h3::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 50px;
-  height: 3px;
-  background: linear-gradient(90deg, #0ea5e9, #90e0ef); /* Gradient underline */
-  border-radius: 2px;
-}
-
-.login-form {
+/* Form styling */
+.login-form, .register-form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: 0 auto;
 }
 
-.login-form label {
-  font-weight: 600;
-  color: #334155;
-  margin-bottom: 0.5rem;
+.login-form label, .register-form label {
+  margin-bottom: 8px;
+  color: #34495e;
+  font-weight: 500;
+  font-size: 14px;
 }
 
-.login-form input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  margin-bottom: 1.25rem;
-  font-size: 1rem;
+.login-form input, .register-form input, .register-form select {
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border 0.3s ease;
+}
+
+.login-form input:focus, .register-form input:focus, .register-form select:focus {
+  border-color: #3498db;
   outline: none;
-  transition: all 0.3s ease;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
-.login-form input:focus {
-  border-color: #3b82f6;
-}
-
-.login-form button,
-.register-form button {
-  padding: 0.75rem 1.5rem;
-  background-color: #158bc7;
+.login-form button, .register-form button {
+  padding: 12px 20px;
+  background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
-  position: relative;
-  overflow: hidden;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
 }
 
-.login-form button::after,
-.register-form button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300%;
-  height: 300%;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transition: transform 0.5s ease;
-}
-
-.login-form button:hover,
-.register-form button:hover {
-  background-color: #0284c7;
-}
-
-.login-form button:hover::after,
-.register-form button:hover::after {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* Register Form Styles */
-.register-form {
-  display: flex;
-  flex-direction: column;
+.login-form button:hover{
+  background-color: #2980b9;
 }
 
 .register-form p {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
+  color: #e74c3c;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
+/* Registration container */
 .special-register-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 .input-container {
   display: flex;
+  flex-direction: column;
 }
 
-.input-container label {
-  font-weight: 600;
-  color: #334155;
-  margin-bottom: 0.5rem;
-}
-
-.input-container input,
-.input-container select {
-  padding: 0.65rem;
-  border: 1px solid #e2e8f0;
-  font-size: 1rem;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.input-container input:focus,
-.input-container select:focus {
-  border-color: #3b82f6;
-}
-
-/* File Upload Styling */
-.file-upload {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-.label-file {
-  display: inline-block;
-  padding: 0.75rem 1rem;
-  background-color: #f1f5f9;
-  color: #334155;
-  border: 1px dashed #cbd5e1;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: normal;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.label-file:hover {
-  background-color: #e2e8f0;
-  border-color: #94a3b8;
-  transform: translateY(-2px); /* Lift effect on hover */
-}
-
-/* Disease Selection Styling */
+/* Disease list styling */
 .add-disease {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
 .add-disease select {
-  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 .add-disease button {
-  background-color: #10b981;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 8px 15px;
+  margin-top: 0;
 }
 
-.add-disease button:hover {
-  background-color: #059669;
-  transform: translateY(-2px); /* Lift effect on hover */
-}
-
-/* Disease List Styling */
 .disease-list {
+  margin-top: 15px;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 10px;
 }
 
 .disease-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background-color: #dbeafe;
-  color: #1e40af;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  gap: 8px;
+  padding: 4px 6px;
+  background-color: #edf2f7;
+  border-radius: 9px;
+  font-size: 14px;
 }
 
 .disease-item button {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: none;
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-left: 0.5rem;
+  background-color: transparent;
+  color: #e74c3c;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin: 0;
 }
 
 .disease-item button:hover {
-  background-color: rgba(239, 68, 68, 0.2);
+  color: red;
 }
 
-/* Login/Register Toggle Link */
-.login-div span,
-.register-div span {
+/* File upload styling */
+.file-upload {
+  display: none;
+}
+
+.label-file {
+  display: inline-block;
+  padding: 12px 15px;
+  background-color: #a1d2f3;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.label-file:hover {
+  background-color: #61b0e6;
+}
+
+/* Login/Register navigation */
+.login-div span, .register-div span {
   display: block;
   text-align: center;
-  margin-top: 1.5rem;
-  color: #64748b;
-  font-size: 0.875rem;
+  margin-top: 25px;
+  font-size: 14px;
+  color: #7f8c8d;
 }
 
-.login-div span a,
-.register-div span a {
-  color: #0ea5e9;
+.login-div a, .register-div a {
+  color: #3498db;
   text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
-.login-div span a:hover,
-.register-div span a:hover {
-  color: #4f46e5;
+.login-div a:hover, .register-div a:hover {
   text-decoration: underline;
 }
 
-/* Notification Styling */
+/* Notification styling */
 .error-notification {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translatey(50%);
-  background-color: #ff3333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  width: auto;
+  max-width: 300px;
+  text-align: center;
 }
 
-.error-notification.show {
-  opacity: 1;
-}
-
-/* Responsive Adjustments */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .account-container {
-    padding: 1.5rem;
-    margin: 1rem;
+    padding: 20px 15px;
+    margin: 20px auto;
   }
   
   .special-register-container {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
   
-  .chose-type {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-  
-  .account-div {
-    padding: 1.5rem;
-  }
-  
-  .add-disease {
-    flex-direction: column;
-  }
-}
-/* Add these to the existing CSS */
-
-:root {
-  /* Existing color variables */
-  --primary-color: #0ea5e9;
-  --secondary-color: #90e0ef;
-  --transition-speed: 0.3s;
-}
-
-/* Background Particle Animation */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 95%;
-  height: 95%;
-  pointer-events: none;
-  background: 
-      radial-gradient(circle at 20% 80%, rgba(9, 131, 188, 0.263) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(9, 131, 188, 0.263) 0%, transparent 50%);
-  animation: particleMove 20s infinite alternate;
-  z-index: -1;
-  opacity: 0.5;
-}
-
-/* Add keyframes for animation */
-@keyframes particleMove {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 100%;
+  .login-div, .register-div {
+    padding: 20px;
   }
 }
 
-/* Enhanced Hover Effects */
-.account-container {
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* Improved form accessibility */
+input:required, select:required {
+  background-image: radial-gradient(#e74c3c 15%, transparent 16%);
+  background-size: 1em 1em;
+  background-position: top right;
+  background-repeat: no-repeat;
 }
 
 /* Processing state styling */
-.login-form button:disabled,
-.register-form button:disabled {
-  background-color: #94a3b8;
-  cursor: wait;
+button:disabled {
+  background-color: #95a5a6 !important;
+  cursor: not-allowed;
 }
 
-/* Warning Message Styling */
+/* Gender select styling */
+select[name="gender"] {
+  padding: 12px 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 14px;
+}
