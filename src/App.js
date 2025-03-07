@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HashRouter, Route, Link, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../src/Assets/logo-main.png';
 import './App.css';
 import Chatbot from './Components/Chatbot';
@@ -37,23 +37,13 @@ function ScrollToTop() {
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("userEmail"));
 
-  const location = useLocation();
-  // Hide Navbar on specific routes like "/HospitalHome" and "/Institute"
-  const hideNavbarRoutes = ['/HospitalHome', '/Institute'];
+  // Hide Navbar on specific routes
+  const hideNavbarRoutes = ['/HospitalHome', '/Institute', '/Market'];
   const hideNavbar = hideNavbarRoutes.includes(location.pathname);
-
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth', // Smooth scrolling
-    });
-  }, [pathname]); // Scrolls to top on route change
-
 
   // Update isLoggedIn when localStorage changes
   useEffect(() => {
@@ -72,6 +62,14 @@ function App() {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []); // Empty dependency array to run only on mount/unmount
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Smooth scrolling
+    });
+  }, [location.pathname]);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const closeMenu = () => setMenuOpen(false);
@@ -123,16 +121,12 @@ function App() {
       {/* Add ScrollToTop component before the rest of your layout */}
       <ScrollToTop />
       
-      {/* <Navbar /> */}
+      {/* Conditionally render Navbar based on the current route */}
       {!hideNavbar && <Navbar />}
+      
       <Routes>
         <Route path="/HospitalHome" element={<HospitalHome />} />
         <Route path="/Institute" element={<Institution />} />
-        {/* other routes */}
-      {/* </Routes> */}
-
-      
-      {/* <Routes> */}
         <Route path='/account' element={<Account />} />
         <Route path='/' element={<Home />} />
         <Route path='/DoctorPanel' element={<DoctorHome />} />
@@ -142,15 +136,12 @@ function App() {
         <Route path='/Administator' element={<Administrator />} />
         <Route path='/Contact' element={<Contact />} />
         <Route path='/InstituteAction' element={<HospitalHome />} />
-        <Route path='/Institute' element={<Institution />} />
         <Route path='/LearnMore' element={<LearnMore />} />
         <Route path="/call" element={<VideoCall />} />
-        {/* <Route path="/call" element={<Video />} /> */}
-        <Route path='/Market' element={<Market/>}></Route>
+        <Route path='/Market' element={<Market />} />
       </Routes>
-      <specialties/>
+      
       <Chatbot />
-      {/* <VideoCall></VideoCall> */}
       <Footer />
     </>
   );
