@@ -181,7 +181,7 @@
 
 /* Blue box specific styles */
 .blue-box {
-  background: linear-gradient(322deg, #3498db00, #45acf0);
+  background: linear-gradient(322deg, #3498db00, #189adb);
   color: white;
   grid-column: 1 / -1;
   margin-bottom: 1rem;
