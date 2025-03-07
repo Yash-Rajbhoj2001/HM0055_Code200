@@ -73,6 +73,7 @@
 
 .Add-entry:nth-of-type(2) {
   background-color: #6366f1;
+  margin-left: 10px;
 }
 
 .Add-entry:nth-of-type(2):hover {
@@ -237,7 +238,7 @@
   }
   
   .Add-entry:nth-of-type(2) {
-    margin-left: 0 !important;
+    margin-left: 50px;
   }
 }
 @media (max-width : 600px){
@@ -256,7 +257,7 @@
     margin-left: 20px;
   }
   .Add-entry:nth-of-type(2){
-    margin-left: 20px;
+    margin-left: 30px;
   }
 }
 /* Stock Display Button */

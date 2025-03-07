@@ -383,7 +383,7 @@ const PatientHome = () => {
                                         {appointment.type === 'online' && (
                                             <button 
                                                 onClick={() => handleJoinCall(appointment.id, patient.patientId)} // Assuming userId is the current patient's ID
-                                                disabled={enableJoinButton}
+                                                disabled={!enableJoinButton}
                                                 style={{
                                                 backgroundColor: enableJoinButton ? '#4CAF50' : '#ccc',
                                                 color: 'white',

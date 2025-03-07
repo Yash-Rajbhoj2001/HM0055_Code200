@@ -170,7 +170,7 @@ const Administrator = () => {
                 </div>
 
                 <button className="Add-entry" onClick={() => setDisplay(true)}>Add Medicine Entry</button>
-                <button className="Add-entry" style={{ marginLeft: '10px' }} onClick={uploadToFirebase}>Update</button>
+                <button className="Add-entry" onClick={uploadToFirebase}>Update</button>
                 <button className="Add-entry view-stock" onClick={toggleStockDisplay}>
                     {stockVisible ? 'Hide Current Stock' : 'View Current Stock'}
                 </button>

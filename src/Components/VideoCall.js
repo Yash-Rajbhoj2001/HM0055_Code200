@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import db from "../firebase";
-import { set, ref,update } from "firebase/database";
-import { useLocation } from "react-router-dom";
+import { set, ref,update,get } from "firebase/database";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 // ✅ Add loadScript() here
 function loadScript(src) {
@@ -16,6 +17,7 @@ function loadScript(src) {
 
 // ✅ Then your component
 const VideoCall = () => {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
   const location = useLocation();
   const doctorid = location.state?.doctorid;
@@ -108,12 +110,23 @@ const VideoCall = () => {
       // This prevents multiple updates and ensures the doctor sets the link
       if (!isPatient && patientId) {
         const appointmentRef = ref(db, `patient/${patientId}/upcomingAppointments/${appointmentid}`);
+        
         try {
-          // Use update instead of set to preserve existing data
-          await update(appointmentRef, {
-            appointmentLink: callLink,
-          });
-          console.log("Appointment updated with video call link.");
+          // First fetch the existing appointment data
+          const appointmentSnapshot = await get(appointmentRef);
+          
+          if (appointmentSnapshot.exists()) {
+            const existingData = appointmentSnapshot.data();
+            
+            // Use update with spread operator to preserve existing data
+            await update(appointmentRef, {
+              ...existingData,
+              appointmentLink: callLink,
+            });
+            console.log("Appointment updated with video call link.");
+          } else {
+            console.log("Appointment does not exist.");
+          }
         } catch (error) {
           console.error("Failed to update appointment:", error);
         }

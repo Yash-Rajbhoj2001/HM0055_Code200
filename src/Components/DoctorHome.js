@@ -393,7 +393,7 @@ const DoctorHome = () => {
                     {/* New Appointment Availability Button */}
                     <button 
                         onClick={() => setShowAppointmentForm(!showAppointmentForm)}
-                        style={{marginTop: '10px',marginLeft:'20px',padding: '8px 15px',backgroundColor: '#4CAF50',color: 'black',border: 'none',borderRadius: '4px',cursor: 'pointer'}}
+                        style={{marginTop: '10px',marginLeft:'20px',padding: '8px 15px',backgroundColor: '#4CAF50',color: 'white',border: 'none',borderRadius: '4px',cursor: 'pointer',fontFamily:'poppins'}}
                     >
                         {showAppointmentForm ? 'Close' : 'Set Appointment Availability'}
                     </button>
@@ -740,7 +740,7 @@ const DoctorHome = () => {
                                     {isOnlineAppointment && (
                                         <button
                                             onClick={() => handleJoinCall(appointment.id,appointment.patientId,appointment.id)}
-                                            disabled={canJoin}
+                                            disabled={!canJoin}
                                             style={{
                                                 padding: '6px 12px',
                                                 backgroundColor: canJoin ? '#4CAF50' : '#e0e0e0',
