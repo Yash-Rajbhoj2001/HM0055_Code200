@@ -1,75 +1,121 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { HashRouter, Route, Link, Routes, useNavigate,useLocation } from 'react-router-dom';
 import logo from '../src/Assets/logo-main.png';
 import './App.css';
-import { HashRouter, Route, Link, Routes } from 'react-router-dom';
+import Chatbot from './Components/Chatbot';
 import Home from './Components/Home';
 import Account from './Components/Account';
 import Admin from './Components/Admin';
 import DoctorHome from './Components/DoctorHome';
-import AppointmentPage from './Components/AppointmentPage';
 import Administrator from './Components/Administrator';
 import PatientHome from './Components/PatientHome';
 import HospitalHome from './Components/HospitalHome';
 import Institution from './Components/Institution';
 import Contact from './Components/Contact';
+import SpecialtiesPage from './Components/Specialities';
+import LearnMore from './Components/LearnMore';
 import Footer from './Components/Footer';
+import VideoCall from "./Components/VideoCall";
+import Navbar from './Components/Navbar';
+
+
+
+
 
 function App() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("userEmail"));
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+  const location = useLocation();
+  // Hide Navbar on specific routes like "/HospitalHome" and "/Institute"
+  const hideNavbarRoutes = ['/HospitalHome', '/Institute'];
+  const hideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Smooth scrolling
+    });
+  }, [pathname]); // Scrolls to top on route change
+
+
+  // Update isLoggedIn when localStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const email = localStorage.getItem("userEmail");
+      setIsLoggedIn(!!email); // Update state based on current localStorage
+    };
+
+    // Listen for storage changes (e.g., from other tabs)
+    window.addEventListener("storage", handleStorageChange);
+
+    // Check localStorage on mount and after login
+    handleStorageChange();
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []); // Empty dependency array to run only on mount/unmount
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userType"); // Consistent key
+    setIsLoggedIn(false);
+    navigate("/");
   };
 
-  // Close menu when a link is clicked
-  const closeMenu = () => {
-    if (menuOpen) setMenuOpen(false);
+  const setdrop = () => {
+    document.querySelector('#drop').classList.toggle('active');
+  };
+
+  const navigateback = () => {
+    const email = localStorage.getItem('userEmail');
+    const type = localStorage.getItem('userType'); // Fixed key to 'userType'
+    console.log('Email:', email, 'Type:', type); // Debug
+    if (type === 'doctor') {
+      navigate('/DoctorPanel', { state: { email } });
+    } else if (type === 'patient') { // Explicitly handle patient type
+      navigate('/PatientPanel', { state: { email } });
+    } else {
+      console.error('Unknown user type:', type);
+      navigate('/'); // Fallback to home if type is invalid
+    }
   };
 
   return (
     <>
-      <header>
-        <div className='logo-div'>
-          <img src={logo} className='App-logo' alt='logo' />
-          <h1>MEDILOG</h1>
-        </div>
-        
-        <button className='mobile-menu-btn' onClick={toggleMenu}>
-          <i className={menuOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
-        </button>
-        
-        <div className={`nav-div ${menuOpen ? 'open' : ''}`}>
-          <Link to='/' onClick={closeMenu}>
-            <i className="fa-solid fa-house"></i>Home
-          </Link>
-          <Link to='/bookappointment' onClick={closeMenu}>
-            <i className="fa-solid fa-calendar-check"></i>Book Appointment
-          </Link>
-          <Link to='/Contact' onClick={closeMenu}>
-            <i className="fa-solid fa-phone"></i>Contact
-          </Link>
-          <Link to='/InstituteAction' onClick={closeMenu}>
-            <i className="fa-solid fa-hospital"></i>Hospital
-          </Link>
-          <Link to='/Account' onClick={closeMenu}>
-            <i className="fa-solid fa-user"></i>Account
-          </Link>
-        </div>
-      </header>
-      
+      {/* <Navbar /> */}
+      {!hideNavbar && <Navbar />}
       <Routes>
-        <Route path='/account' element={<Account />} />
-        <Route path='/' element={<Home />}></Route>
-        <Route path='/DoctorPanel' element={<DoctorHome />}></Route>
-        <Route path='/Admin' element={<Admin />}></Route>
-        <Route path='/PatientPanel' element={<PatientHome />}></Route>
-        <Route path='/bookappointment' element={<AppointmentPage />}></Route>
-        <Route path='/Administator' element={<Administrator />}></Route>
-        <Route path='/Contact' element={<Contact />}></Route>
-        <Route path='/InstituteAction' element={<HospitalHome />}></Route>
-        <Route path='/Institute' element={<Institution />}></Route>
-      </Routes>
+        <Route path="/HospitalHome" element={<HospitalHome />} />
+        <Route path="/Institute" element={<Institution />} />
+        {/* other routes */}
+      {/* </Routes> */}
+
       
+      {/* <Routes> */}
+        <Route path='/account' element={<Account />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/DoctorPanel' element={<DoctorHome />} />
+        <Route path='/Admin' element={<Admin />} />
+        <Route path='/PatientPanel' element={<PatientHome />} />
+        <Route path='/bookappointment' element={<SpecialtiesPage />} />
+        <Route path='/Administator' element={<Administrator />} />
+        <Route path='/Contact' element={<Contact />} />
+        <Route path='/InstituteAction' element={<HospitalHome />} />
+        <Route path='/Institute' element={<Institution />} />
+        <Route path='/LearnMore' element={<LearnMore />} />
+        <Route path="/call" element={<VideoCall />} />
+      </Routes>
+      <specialties/>
+      <Chatbot />
+      {/* <VideoCall></VideoCall> */}
       <Footer />
     </>
   );

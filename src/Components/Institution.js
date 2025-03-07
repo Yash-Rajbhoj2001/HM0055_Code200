@@ -6,6 +6,7 @@ import "../Styles/institution.css";
 import Admin from "./Admin";
 import '../App.css'
 import Administrator from "./Administrator";
+import logo from '../Assets/logo-main.png';
 
 const Institute = () => {
   const location = useLocation();
@@ -109,11 +110,18 @@ const Institute = () => {
   return (
     <div className="institution-container">
       <header className="institution-header">
+      <div className='logo-div'>
+          <img src={logo} className='App-logo' alt='logo' />
+          <h1>MEDILOG</h1>
+        </div>
         <div className="institution-header-content">
-          <h1>{hospitalData?.hospitalName}</h1>
-          <button className="logout-button" onClick={handleLogout}>
+          {/* <h1>{hospitalData?.hospitalName}</h1> */}
+          <h1>CHINTAMANI HOSPITAL</h1>
+        </div>
+        <div>
+        <button className="logout-button" onClick={handleLogout}>
             Logout
-          </button>
+        </button>
         </div>
       </header>
 
@@ -151,13 +159,14 @@ const Institute = () => {
               {doctors.map((doctor) => (
                 <div key={doctor.id} className="doctor-card">
                   <div className="doctor-avatar">
-                    <span>{doctor.name?.charAt(0) || "D"}</span>
+                    <span>{doctor.firstname?.charAt(0) || "D"}</span>
                   </div>
                   <div className="doctor-info">
-                    <h3>{doctor.name}</h3>
-                    <p className="doctor-specialty">{doctor.specialty || "General Practitioner"}</p>
-                    <p className="doctor-details">{doctor.email}</p>
-                    <p className="doctor-details">{doctor.phone}</p>
+                    <h3>{doctor.firstname}</h3>
+                    <p className="doctor-specialty">{doctor.specialisation || "General Practitioner"} </p>
+                    <p className="doctor-specialty">Doctor Id :{doctor.doctorid}</p>
+                    <p className="doctor-details">Email : {doctor.email}</p>
+                    <p className="doctor-details">Contact : {doctor.contact}</p>
                   </div>
                 </div>
               ))}

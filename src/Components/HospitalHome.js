@@ -5,9 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import db, { auth } from '../firebase';
 import '../App.css'
 import '../Styles/hospital.css';
+import Navbar from './Navbar';
+
 
 const HospitalHome = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hospitalName, setHospitalName] = useState("");

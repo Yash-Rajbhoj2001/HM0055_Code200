@@ -4,7 +4,7 @@ import '../Styles/Account.css'
 import { set, ref, get, update } from 'firebase/database';
 import db from '../firebase';
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, setDoc, doc } from '../firebase';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Notification from './Notification';
 const Account = () => {
     const navigate = useNavigate();

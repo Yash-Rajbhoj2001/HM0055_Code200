@@ -34,15 +34,18 @@
   z-index: 1; /* Ensures content is above the blurred background */
 }
 
-
-
 .hero-information-div h1 {
   font-size: 3.5rem;
-  font-weight: 800; 
+  font-weight: 800;
   color: #2c3e50c8;
   margin-bottom: 1.5rem;
   text-align: center;
   position: relative;
+  transition: transform 0.3s ease; /* Add transition for hover effect */
+}
+
+.hero-information-div h1:hover {
+  transform: translateY(-5px); /* Pop up effect on hover */
 }
 
 .hero-information-div h1::after {
@@ -77,16 +80,106 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden; /* Ensure content doesn't overflow during animations */
 }
 
 .feature-box:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-10px) scale(1.02); /* Move up and slightly scale */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9; /* Light background on hover */
 }
 
+.feature-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feature-box:hover::before {
+  opacity: 1;
+}
+
+/* Add a subtle border animation on hover */
+.feature-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  border: 2px solid rgba(52, 152, 219, 0.2); /* Light blue border */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: none;
+}
+
+.feature-box:hover::after {
+  opacity: 1;
+}
+
+/* Icon animation */
+.icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Text animation */
+.feature-box h3 {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.feature-box:hover h3 {
+  color: #3498db; 
+}
+
+.feature-box p {
+  color: #2c3e50;
+  line-height: 1.6;
+  margin-bottom: 0;
+  flex-grow: 1;
+  transition: color 0.3s ease;
+}
+
+.feature-box:hover p {
+  color: #555; /* Change paragraph text color on hover */
+}
+
+.features-c {
+  background: white;
+  color: #2c3e50;
+  grid-column: 1 / -1;
+  margin-bottom: 1rem;;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden; 
+
+}
+
+/* Blue box specific styles */
 .blue-box {
   background: linear-gradient(322deg, #3498db00, #45acf0);
   color: white;
@@ -107,26 +200,7 @@
   opacity: 0.9;
 }
 
-.icon {
-  font-size: 2.5rem;
-  margin-bottom: 1.2rem;
-  display: block;
-}
-
-.feature-box h3 {
-  font-size: 1.4rem;
-  color: #2c3e50;
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-.feature-box p {
-  color: #2c3e50;
-  line-height: 1.6;
-  margin-bottom: 0;
-  flex-grow: 1;
-}
-
+/* Learn More button animation */
 .learn-more-btn {
   background-color: white;
   color: #3498db;
@@ -144,8 +218,16 @@
 
 .learn-more-btn:hover {
   background-color: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
+  transform: translateY(-5px) scale(1.05); /* Pop up and scale on hover */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  color: #2c3e50; /* Change button text color on hover */
+}
+
+.count-number {
+  font-size: 48px;
+  font-weight: bold;
+  color: #e4a546; /* Blue color */
+  margin: 10px 0;
 }
 
 /* Responsive adjustments */
@@ -153,7 +235,7 @@
   .hero-information-div h1 {
     font-size: 3rem;
   }
-  
+
   .features-container {
     gap: 1.5rem;
   }
@@ -163,19 +245,15 @@
   .hero-information-div h1 {
     font-size: 2.5rem;
   }
-  
+
   .hero-information-div > p {
     font-size: 1.1rem;
   }
-  
+
   .feature-box {
     padding: 1.5rem;
   }
-  .feature-box:hover {
-    transform: translateY(-10px);
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-}
-  
+
   .blue-box h2 {
     font-size: 1.8rem;
   }
@@ -185,28 +263,28 @@
   .hero-banner {
     padding: 1.5rem;
   }
-  
+
   .hero-information-div h1 {
     font-size: 2rem;
   }
-  
+
   .hero-information-div > p {
     font-size: 1rem;
     margin-bottom: 2rem;
   }
-  
+
   .feature-box {
     padding: 1.2rem;
   }
-  
+
   .blue-box h2 {
     font-size: 1.5rem;
   }
-  
+
   .feature-box h3 {
     font-size: 1.2rem;
   }
-  
+
   .icon {
     font-size: 2rem;
   }
@@ -239,4 +317,140 @@
 
 .feature-box:hover::before {
   opacity: 1;
+}
+
+/* Existing CSS remains unchanged, adding new animations below */
+
+/* Particle background effect for hero banner */
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(45deg, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(52, 152, 219, 0.1) 10%, transparent 80%);
+  animation: particleMove 20s infinite linear;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+@keyframes particleMove {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(50px) translateY(30px) rotate(180deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(360deg);
+  }
+}
+
+/* Typing animation for hero text */
+.hero-information-div h1 {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #3498db }
+  
+}
+
+/* Floating animation for feature boxes */
+.feature-box {
+  animation: float 4s ease-in-out infinite;
+  animation-delay: calc(var(--delay) * 0.2s);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.features-container .feature-box:nth-child(1) { --delay: 1; }
+.features-container .feature-box:nth-child(2) { --delay: 2; }
+.features-container .feature-box:nth-child(3) { --delay: 3; }
+
+/* Subtle gradient overlay for feature boxes */
+.feature-box::before {
+  background: linear-gradient(
+    135deg, 
+    rgba(52, 152, 219, 0.05) 0%, 
+    rgba(52, 152, 219, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.feature-box:hover::before {
+  opacity: 1;
+}
+
+/* Staggered reveal animation for feature boxes */
+.features-container {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: staggerReveal 1s forwards;
+}
+
+@keyframes staggerReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.features-container .feature-box {
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeInScale 0.6s forwards;
+  animation-delay: calc(var(--delay) * 0.2s);
+}
+
+@keyframes fadeInScale {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Subtle text shadow on hover for headings */
+.feature-box h3 {
+  transition: text-shadow 0.3s ease;
+}
+
+.feature-box:hover h3 {
+  text-shadow: 1px 1px 2px rgba(52, 152, 219, 0.3);
+}
+
+/* Pulsating learn more button */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.learn-more-btn:hover {
+  animation: pulse 1s infinite;
+}
+
+/* Additional responsive tweaks */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable animations for users who prefer reduced motion */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

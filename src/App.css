@@ -1,3 +1,12 @@
+body{
+  scroll-behavior: smooth;
+}
+body::-webkit-scrollbar-button{
+  display: none;
+}
+body::-webkit-scrollbar{
+  display: none;
+}
 header{
   width: 100%;
   height: 70px;
@@ -24,6 +33,46 @@ header{
   color: white;
   text-decoration: none;
 }
+.profile{
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70px;
+  cursor: pointer;
+  padding-left: 10px; 
+  padding-right: 10px;
+  border-radius: 5px;
+}
+.profile p{
+  margin-left: 5px;
+}
+
+.profile:hover{
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+.drop-down{
+  display: none;
+  margin-top: 20px;
+  right: 3px;
+  padding: 10px;
+  text-align: left;
+}
+.drop-down p{
+  margin: 0px;
+  cursor: pointer;
+}
+.active{
+  display: flex;
+  flex-direction: column;
+  background-color: #189adb;
+  color: white;
+  position: absolute;
+  gap: 10px;
+  font-family: poppins;
+  border-radius: 5px;
+}
 
 /*
 DoctorHome.css
@@ -37,7 +86,7 @@ DoctorHome.css
 .doctor-profile{
   width: 30%;
   height: 500px;
-  background-color: #03045e;
+  background-color: #0e6496;
   margin-left: 20px;
   border-radius: 9px;
   color: white;
@@ -316,4 +365,332 @@ header {
 }
 .notification-container p{
   margin-left: 30px;
+}
+/* Advanced and Modern App.css */
+
+/* ================== */
+/* CSS Variables */
+/* ================== */
+:root {
+  /* Color Palette */
+  --primary-color: #03045e;
+  --secondary-color: #03205e;
+  --accent-color: #00b4d8;
+  --secondary-color: #00507b;
+  --accent-color: #007b94;
+  --text-color: white;
+  --transition-speed: 0.3s;
+  --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 6px 12px rgba(0, 0, 0, 0.15);
+  --shadow-heavy: 0 8px 15px rgba(0, 0, 0, 0.2);
+  --border-radius: 8px;
+}
+
+/* ================== */
+/* Base Styles */
+/* ================== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+}
+
+/* ================== */
+/* Header Styling */
+/* ================== */
+header {
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(135deg, #032a4d, #189adb);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-light), var(--shadow-heavy);
+  transition: all var(--transition-speed) ease;
+  will-change: transform, box-shadow;
+}
+
+header:hover {
+  box-shadow: var(--shadow-medium), var(--shadow-heavy);
+}
+
+/* ================== */
+/* Logo Section */
+/* ================== */
+.logo-div {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  transition: transform var(--transition-speed) ease;
+}
+
+.logo-div h1 {
+  font-size: 30px;
+  margin-left: 10px;
+  white-space: nowrap;
+  text-shadow: var(--shadow-light);
+}
+
+.logo-div img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: var(--shadow-light);
+  transition: all var(--transition-speed) ease;
+}
+
+.logo-div img:hover {
+  transform: rotate(360deg);
+  box-shadow: var(--shadow-medium);
+}
+
+/* ================== */
+/* Navigation Links */
+/* ================== */
+.nav-div {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  gap: 20px;
+}
+
+.nav-div a {
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: var(--border-radius);
+  transition: 
+    background-color var(--transition-speed),
+    transform var(--transition-speed),
+    box-shadow var(--transition-speed);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-div a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  
+  background: linear-gradient(
+    120deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent
+    
+  );
+  transition: all var(--transition-speed) ease;
+  
+}
+
+.nav-div a:hover::before {
+  left: 100%;
+}
+
+.nav-div a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-light);
+}
+
+.nav-div a i {
+  margin-right: 8px;
+  transition: transform var(--transition-speed) ease;
+}
+
+.nav-div a:hover i {
+  transform: scale(1.2);
+}
+
+/* ================== */
+/* Mobile Menu Button */
+/* ================== */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  margin-right: 10px;
+  transition: 
+    transform var(--transition-speed) ease,
+    color var(--transition-speed) ease;
+}
+
+.mobile-menu-btn:hover {
+  transform: rotate(90deg) scale(1.2);
+  color: var(--accent-color);
+}
+
+/* ================== */
+/* Notification Container */
+/* ================== */
+.notification-container {
+  width: 400px;
+  height: 50px;
+  background: linear-gradient(135deg, #cbffba, #89f7be);
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  z-index: 1000;
+  box-shadow: var(--shadow-light), var(--shadow-heavy);
+  transition: all var(--transition-speed) ease;
+}
+
+.notification-container:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium), var(--shadow-heavy);
+}
+
+.notification-container p {
+  margin-left: 30px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* ================== */
+/* Responsive Adjustments */
+/* ================== */
+
+/* Tablet and Smaller Screens */
+@media (max-width: 768px) {
+  header {
+    height: auto;
+    flex-wrap: wrap;
+    /* padding: 10px; */
+  }
+
+  .logo-div {
+    flex: 1;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-div {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-speed) ease;
+  }
+
+  .nav-div.open {
+    max-height: 300px;
+    padding: 10px 0;
+  }
+
+  .nav-div a {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 0;
+    margin: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-div a:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Phone Responsiveness (Max-width: 480px) */
+@media (max-width: 280px) {
+  /* Header Adjustments */
+  header {
+    height: 60px;
+    padding: 5px;
+  }
+
+  .logo-div {
+    margin-left: 10px;
+  }
+
+  .logo-div h1 {
+    font-size: 18px;
+    margin-left: 5px;
+  }
+
+  .logo-div img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-menu-btn {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+
+  /* Notification Container Adjustments */
+  .notification-container {
+    width: 90%;
+    right: 5%;
+    top: 10px;
+    height: 40px;
+  }
+
+  .notification-container p {
+    margin-left: 15px;
+    font-size: 14px;
+  }
+
+  /* Navigation Links Adjustments */
+  .nav-div a {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .nav-div a i {
+    margin-right: 5px;
+  }
+}
+
+/* Extra Small Phones (Max-width: 360px) */
+@media (max-width: 360px) {
+  .logo-div h1 {
+    font-size: 16px;
+  }
+
+  .logo-div img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .notification-container {
+    width: 95%;
+    right: 2.5%;
+    top: 5px;
+    height: 35px;
+  }
+
+  .notification-container p {
+    margin-left: 10px;
+    font-size: 12px;
+  }
+
+  .nav-div a {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }

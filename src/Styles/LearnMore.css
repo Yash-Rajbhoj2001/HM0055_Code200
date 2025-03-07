@@ -1,0 +1,194 @@
+/* General Styles */
+.learn-more {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(to right, #1691d0, #0c5b8b);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .cta-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+    
+  .secondary-cta {
+    background: white;
+    border: 2px solid black;
+  }
+  
+  /* Overview Section */
+  .overview {
+    padding: 60px 20px;
+    text-align: center;
+    background: #f9f9f9;
+  }
+  
+  .overview h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .overview p {
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Key Features Section */
+  .key-features {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .key-features h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .feature-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .feature-card img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .feature-card p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  /* Benefits Section */
+  .benefits {
+    padding: 60px 20px;
+    background: #f9f9f9;
+    text-align: center;
+  }
+  
+  .benefits h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .benefits-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .benefit-item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .benefit-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .benefit-item p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  /* Testimonials Section */
+  .testimonials {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .testimonials h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .testimonial-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .testimonial-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .testimonial-card img {
+    width:300px;
+    height: auto;
+  }
+  
+  .testimonial-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .testimonial-card h4 {
+    font-size: 1.2rem;
+    color: #1691d0;
+  }
+  
+  /* Call-to-Action Section */
+  .cta {
+    background: linear-gradient(to right, #1691d0, #0c5b8b);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+  }
+  
+  .cta h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+ 

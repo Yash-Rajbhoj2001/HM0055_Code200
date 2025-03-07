@@ -1,9 +1,11 @@
-/* Account Container */
+/* Advanced and Modern Account.css */
+
 /* Full Page Background */
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
+  background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
   background-attachment: fixed; /* Ensures the image stays fixed when scrolling */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -12,14 +14,15 @@ body {
 .account-container {
   max-width: 1000px;
   margin: 2rem auto;
-  background: rgba(255, 255, 255, 0.9); /* Adds a semi-transparent white background */
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95); /* Adds a semi-transparent white background */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   padding: 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
-
-/* Optional: Add a semi-transparent overlay for better text visibility
+/* Optional: Add a semi-transparent overlay for better text visibility */
 .account-container::before {
   content: "";
   position: absolute;
@@ -27,11 +30,10 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Adjust the transparency as needed */
-  /* border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1); /* Adjust the transparency as needed */
+  border-radius: 12px;
   z-index: -1;
-} */ 
-
+}
 
 /* Account Type Selector */
 .chose-type {
@@ -44,43 +46,63 @@ body {
 }
 
 .chose-type h2 {
-  color: #0ea5e9;
+  color: #158bc7;
   font-size: 1.75rem;
   margin: 0;
+  font-weight: 700; /* Bold font */
 }
 
 .chose-type a {
-  color: #0ea5e9;
+  color: #158bc7;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   background-color: #eff6ff;
+  border: 1px solid #0ea5e9; /* Added border */
 }
 
 .chose-type a:hover {
-  color: #4f46e5;
-  background-color: #dbeafe;
+  color: #fff; /* White text on hover */
+  background-color: #0ea5e9; /* Blue background on hover */
 }
 
 /* Account Div (Container for Login/Register Forms) */
 .account-div {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   padding: 2rem;
+  transition: all 0.3s ease; /* Smooth transitions */
+}
+
+.account-div:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
 /* Login Form Styles */
 .login-div h3, 
 .register-div h3 {
-  color: #0ea5e9;
+  color: #158bc7;
   font-size: 1.5rem;
   margin-top: 0;
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid #e2e8f0;
+  position: relative;
+}
+
+.login-div h3::after,
+.register-div h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #0ea5e9, #90e0ef); /* Gradient underline */
+  border-radius: 2px;
 }
 
 .login-form {
@@ -103,30 +125,49 @@ body {
   margin-bottom: 1.25rem;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .login-form input:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .login-form button,
 .register-form button {
   padding: 0.75rem 1.5rem;
-  background-color: #0ea5e9;
+  background-color: #158bc7;
   color: white;
   border: none;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-form button::after,
+.register-form button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transition: transform 0.5s ease;
 }
 
 .login-form button:hover,
 .register-form button:hover {
   background-color: #0284c7;
+}
+
+.login-form button:hover::after,
+.register-form button:hover::after {
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* Register Form Styles */
@@ -150,7 +191,6 @@ body {
 
 .input-container {
   display: flex;
-  flex-direction: column;
 }
 
 .input-container label {
@@ -166,13 +206,12 @@ body {
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .input-container input:focus,
 .input-container select:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 /* File Upload Styling */
@@ -195,12 +234,13 @@ body {
   cursor: pointer;
   font-weight: normal;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .label-file:hover {
   background-color: #e2e8f0;
   border-color: #94a3b8;
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 /* Disease Selection Styling */
@@ -221,11 +261,12 @@ body {
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .add-disease button:hover {
   background-color: #059669;
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 /* Disease List Styling */
@@ -243,6 +284,12 @@ body {
   border-radius: 4px;
   font-size: 0.875rem;
   font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.disease-list div:hover {
+  background-color: #bfdbfe; /* Darker blue on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 /* Login/Register Toggle Link */
@@ -257,16 +304,17 @@ body {
 
 .login-div span a,
 .register-div span a {
-  color: #6366f1;
+  color: #0ea5e9;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .login-div span a:hover,
 .register-div span a:hover {
   color: #4f46e5;
   text-decoration: underline;
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 /* Responsive Adjustments */
@@ -291,3 +339,35 @@ body {
     padding: 1.5rem;
   }
 }
+/* Add these to the existing CSS */
+
+:root {
+  /* Existing color variables */
+  --primary-color: #0ea5e9;
+  --secondary-color: #90e0ef;
+  --transition-speed: 0.3s;
+}
+
+/* Background Particle Animation */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: 
+      radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(144, 224, 239, 0.1) 0%, transparent 50%);
+  animation: particleMove 20s infinite alternate;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* Enhanced Hover Effects */
+.account-container {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+

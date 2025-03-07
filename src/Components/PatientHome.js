@@ -1,10 +1,11 @@
 import { useState, useEffect} from 'react';
 import '../Styles/PatientHome.css'
 import '../App.css'
-import { useLocation } from 'react-router-dom'
+import { redirect, useLocation, useNavigate } from 'react-router-dom'
 import db from '../firebase';
 import { get,ref, update } from 'firebase/database';
 import Notification from './Notification';
+import { Link } from 'react-router-dom';
 const PatientHome = () => {
     const location = useLocation();
     const [showToast, setShowToast] = useState(false);
@@ -12,6 +13,7 @@ const PatientHome = () => {
     const [appoint,setAppoint] = useState(false);
     const [processing,setProcessing] = useState(false);
     const [notificationMessage,setNotificationMessage] = useState('');
+    const navigate = useNavigate();
 
     //files for
     const [note, setNote] = useState("");
@@ -26,8 +28,9 @@ const PatientHome = () => {
     const [appointments, setAppointments] = useState([]);
     const [appointmentToDisplay,setAppointmentsToDisplay] = useState({});
 
+    
 
-
+    localStorage.setItem('id',patient.patientid);
     useEffect(() => {
         // Update time every second
         const timer = setInterval(() => {
@@ -140,10 +143,19 @@ const PatientHome = () => {
                 }
             );
     
+            const generateAppointmentID = () => {
+                const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Alphanumeric characters
+                let appointmentID = "Appointment_";
+                for (let i = 0; i < 5; i++) {
+                    appointmentID += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return appointmentID;
+            };
+
             const data = await response.json();
             if (data.secure_url) {
                 // Save data to Firebase
-                const appointmentID = `Appointment_${Date.now()}`;
+                const appointmentID = generateAppointmentID();
                 await update(ref(db, `Appointment/${appointmentID}`), {
                     note,
                     doctorID,
@@ -190,6 +202,50 @@ const PatientHome = () => {
             .catch(err => console.error('Error copying:', err));
     };
     
+    // Helper function to check if a date has passed
+    const isExpired = (dateString) => {
+        const appointmentDate = new Date(dateString);
+        return appointmentDate < currentDateTime;
+    };
+    
+    // Helper function to check if appointment is today
+    const isToday = (dateString) => {
+        const appointmentDate = new Date(dateString);
+        return appointmentDate.toDateString() === currentDateTime.toDateString();
+    };
+    
+    // Helper function to check if join call button should be enabled
+    const shouldEnableJoinCall = (appointment) => {
+        if (!isToday(appointment.day) || appointment.type !== 'online') return false;
+        
+        // Parse appointment time
+        const [hourMinute, ampm] = appointment.time.split(' ');
+        const [hour, minute] = hourMinute.split(':');
+        
+        let appointmentHour = parseInt(hour, 10);
+        if (ampm === 'PM' && appointmentHour !== 12) appointmentHour += 12;
+        if (ampm === 'AM' && appointmentHour === 12) appointmentHour = 0;
+        
+        // Create appointment time date object
+        const appointmentTime = new Date(currentDateTime);
+        appointmentTime.setHours(appointmentHour);
+        appointmentTime.setMinutes(parseInt(minute, 10));
+        
+        // Enable 5 minutes before appointment time
+        const fiveMinutesBefore = new Date(appointmentTime);
+        fiveMinutesBefore.setMinutes(fiveMinutesBefore.getMinutes() - 5);
+        
+        return currentDateTime >= fiveMinutesBefore && currentDateTime <= appointmentTime;
+    };
+    
+    // Function to handle join call button click
+    const handleJoinCall = (appointmentId,appointLink) => {
+        // Implement your video call logic here
+        console.log(`Joining call for appointment: ${appointmentId}`);
+        // This could redirect to a video call page or launch a modal with the video call
+        navigate(appointLink);
+        
+    };
 
   return (
     <>
@@ -201,7 +257,7 @@ const PatientHome = () => {
                 <div className='patient-info'>
                     <div style={{display:'flex',fontWeight:'bold',width:'auto',alignItems:'center',gap:'10px'}}>
                         <p>Id : {patient.patientid}</p>
-                        <i class="fa-solid fa-copy fa-lg" style={{cursor:'pointer'}} onClick={() => copyToClipboard(patient.patientid)}></i>
+                        <i className="fa-solid fa-copy fa-lg" style={{cursor:'pointer'}} onClick={() => copyToClipboard(patient.patientid)}></i>
                     </div>
                     <p>Name : {patient.firstname} {patient.lastname}</p>
                     <p>Contact : {patient.contact}</p>
@@ -224,11 +280,59 @@ const PatientHome = () => {
                 <>
                     <p style={{marginLeft:'30px',fontWeight:'bold',fontSize:'20px'}}>Upcomming Appointment's</p>
                     <div className='upcomming-appointments'>
-                        {Array.isArray(patient.nextappointment) && patient.nextappointment.length > 0 ? (
-                            <div></div>
-                        ) : (
-                            <p style={{marginLeft:'30px',textAlign:'center'}}>No Appointments further</p>
-                        )}
+                    {patient.upcomingAppointments && Object.keys(patient.upcomingAppointments).length > 0 ? (
+                        <div className='upcoming-appointments-list'>
+                            {Object.entries(patient.upcomingAppointments).map(([appointmentId, appointment]) => {
+                                const expired = isExpired(appointment.day);
+                                const today = isToday(appointment.day);
+                                const enableJoinButton = today && appointment.type === 'online' && shouldEnableJoinCall(appointment);
+                                
+                                return (
+                                    <div 
+                                        key={appointmentId} 
+                                        className='appointment-item'
+                                        style={{ 
+                                            borderColor: expired ? 'red' : today ? '#007bff' : 'grey',
+                                            borderWidth: '2px',
+                                            borderStyle: 'solid',
+                                            borderRadius: '8px',
+                                            padding: '10px',
+                                            marginBottom: '10px'
+                                        }}
+                                    >
+                                        <p><strong>Appointment ID:</strong> {appointmentId}</p>
+                                        <p><strong>Date:</strong> {appointment?.day}</p>
+                                        <p><strong>Patient ID:</strong> {appointment.patientId}</p>
+                                        <p><strong>Doctor ID:</strong> {appointment.doctorId}</p>
+                                        <p><strong>Type:</strong> {appointment?.type}</p>
+                                        <p><strong>Time:</strong> {appointment.time}</p>
+                                        
+                                        {appointment.type === 'online' && (
+                                            <Link to={appointment?.appointmentLink}>
+                                                <button 
+                                                    onClick={() => handleJoinCall(appointmentId,appointment.appointmentLink)}
+                                                    disabled={enableJoinButton}
+                                                    style={{
+                                                        backgroundColor: enableJoinButton ? '#4CAF50' : '#ccc',
+                                                        color: 'white',
+                                                        padding: '8px 12px',
+                                                        border: 'none',
+                                                        borderRadius: '4px',
+                                                        cursor: enableJoinButton ? 'pointer' : 'not-allowed',
+                                                        marginTop: '10px'
+                                                    }}
+                                                >
+                                                    Join Call
+                                                </button>
+                                            </Link>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <p style={{ marginLeft: '30px', textAlign: 'center' }}>No Appointments further</p>
+                    )}
                     </div>
                     </>
                 }
@@ -251,7 +355,7 @@ const PatientHome = () => {
             &&<div className='add-appointment-containner' id='add-appointment'>
                 <div className='add-app' onClick={() => setAppoint(true)}>
                     Add Appointment
-                    <i class="fa-solid fa-plus fa-lg"></i>
+                    <i className="fa-solid fa-plus fa-lg"></i>
                 </div>
             </div>
             }
