@@ -223,6 +223,7 @@
 /* Added medicines section */
 .added-medicine {
   padding: 1.5rem;
+  width: auto;
   background-color: white;
   border-radius: 12px; /* Rounded corners */
   transition: all 0.3s ease; /* Smooth transitions */
@@ -363,7 +364,7 @@
   }
   
   .medical-patient-search input {
-    width: 100%;
+    width: 95%;
     margin-bottom: 0.5rem;
   }
   
