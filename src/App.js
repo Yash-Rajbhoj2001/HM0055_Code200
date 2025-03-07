@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HashRouter, Route, Link, Routes, useNavigate,useLocation } from 'react-router-dom';
+import { HashRouter, Route, Link, Routes, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../src/Assets/logo-main.png';
 import './App.css';
 import Chatbot from './Components/Chatbot';
@@ -18,9 +18,20 @@ import Footer from './Components/Footer';
 import VideoCall from "./Components/VideoCall";
 import Navbar from './Components/Navbar';
 
-
-
-
+// Create a ScrollToTop component that doesn't modify your existing code
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    // Apply smooth scrolling on route change
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [pathname]);
+  
+  return null;
+}
 
 function App() {
   const navigate = useNavigate();
@@ -88,8 +99,28 @@ function App() {
     }
   };
 
+  // Add CSS for smooth scrolling globally
+  useEffect(() => {
+    // Create style element
+    const style = document.createElement('style');
+    style.textContent = `
+      html {
+        scroll-behavior: smooth !important;
+      }
+    `;
+    // Add to document head
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <>
+      {/* Add ScrollToTop component before the rest of your layout */}
+      <ScrollToTop />
+      
       {/* <Navbar /> */}
       {!hideNavbar && <Navbar />}
       <Routes>
