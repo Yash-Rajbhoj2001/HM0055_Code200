@@ -740,7 +740,7 @@ const DoctorHome = () => {
                                     {isOnlineAppointment && (
                                         <button
                                             onClick={() => handleJoinCall(appointment.id,appointment.patientId,appointment.id)}
-                                            disabled={canJoin}
+                                            disabled={!canJoin}
                                             style={{
                                                 padding: '6px 12px',
                                                 backgroundColor: canJoin ? '#4CAF50' : '#e0e0e0',
