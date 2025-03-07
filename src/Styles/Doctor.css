@@ -5,8 +5,9 @@
   justify-content: space-between;
 }
 .doctor-profile{
-  width: 350px;
-  height: 400px;
+  width: 320px;
+  height: auto;
+  padding-bottom: 20px;
   background-color:#094b76;
   margin-left: 20px;
   border-radius: 9px;
@@ -87,7 +88,8 @@ gap: 10px;
 
 .patient-item {
 padding: 10px;
-background-color: #e7f3e7;
+background-color: white;
+font-family: poppins;
 border-radius: 4px;
 cursor: pointer;
 transition: background-color 0.3s;

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import db from "../firebase";
 import { set, ref,update } from "firebase/database";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 // ✅ Add loadScript() here
 function loadScript(src) {
@@ -16,6 +17,7 @@ function loadScript(src) {
 
 // ✅ Then your component
 const VideoCall = () => {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
   const location = useLocation();
   const doctorid = location.state?.doctorid;
