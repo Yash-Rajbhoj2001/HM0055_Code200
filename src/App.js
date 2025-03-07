@@ -19,6 +19,8 @@ import VideoCall from "./Components/VideoCall";
 // import Video from "./Components/Video";
 import Navbar from './Components/Navbar';
 import Market from './Components/Market';
+import BookAccount from './Components/BookAccount';
+
 
 // Create a ScrollToTop component that doesn't modify your existing code
 function ScrollToTop() {
@@ -139,6 +141,8 @@ function App() {
         <Route path='/LearnMore' element={<LearnMore />} />
         <Route path="/call" element={<VideoCall />} />
         <Route path='/Market' element={<Market />} />
+        <Route path='/BookAccount' element={<BookAccount />} />
+
       </Routes>
       
       <Chatbot />

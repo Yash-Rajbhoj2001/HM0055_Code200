@@ -59,10 +59,12 @@ header{
   padding: 10px;
   text-align: left;
 }
+
 .drop-down p{
   margin: 0px;
   cursor: pointer;
 }
+
 .active{
   display: flex;
   flex-direction: column;

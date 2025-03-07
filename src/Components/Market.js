@@ -174,17 +174,8 @@ const Market = () => {
   };
   
   return (
-    <>
-    
+    <>   
       <div>
-        {/* <header className='marketHeader'>
-        <div className='logo-div'>
-                  <img src={logo} className='App-logo' alt='logo' />
-                  <h1>MEDILOG</h1>
-                </div>
-                <h1>Market</h1>
-          
-        </header> */}
         <header className="institution-header">
         <div className='logo-div'>
           <img src={logo} className='App-logo' alt='logo' />
