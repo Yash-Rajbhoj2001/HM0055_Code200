@@ -2,7 +2,7 @@
 .Inventory {
   max-width: 1170px;
   margin-top: 20px;
-  margin: 0 auto;
+  margin-bottom: 24px;
   transform: translateY(20px);
   background-color: #f8fafc;
   border-radius: 10px;
