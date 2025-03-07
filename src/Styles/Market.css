@@ -10,10 +10,9 @@
   
   /* Market header */
   .marketHeader {
-    background: linear-gradient(135deg, #2a70c7, #1e5ba0);
+    background: linear-gradient(135deg, #1792d1, #05385f);
     color: white;
     padding: 15px 20px;
-    border-radius: 8px 8px 0 0;
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
@@ -149,7 +148,7 @@
   
   /* Grant button */
   .requirements button {
-    background-color: #2a70c7;
+    background-color: #127db7;
     color: white;
     border: none;
     padding: 8px 16px;
