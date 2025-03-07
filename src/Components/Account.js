@@ -218,6 +218,7 @@ const Account = () => {
                         doctorid: doctorId,
                         hospitalId: formData.hospitalId, // Save hospital ID with doctor data
                         RecentPatients: [],
+                        age: formData.age,
                         Ratting: [0, 0],
                     };
 
@@ -258,6 +259,7 @@ const Account = () => {
                         firstname: formData.firstname,
                         lastname: formData.lastname,
                         email: formData.email,
+                        age:formData.age,
                         contact: formData.contact,
                         disease: diseaselist,
                         appointments: [],
