@@ -634,10 +634,10 @@ const displayErrorNotification = (message) => {
           <h1>CHINTAMANI HOSPITAL</h1>
         </div>
         <div>
-        <button className="logout-button" onClick={handleLogout}>
+        <button className="logout-button" style={{marginRight:'20px'}}  onClick={handleLogout}>
             Logout
         </button>
-        <button className="logout-button" onClick={handleMarket}>
+        <button className="logout-button"style={{marginRight:'20px'}}  onClick={handleMarket}>
           Market
         </button>
         </div>
