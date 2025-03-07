@@ -16,6 +16,7 @@ import SpecialtiesPage from './Components/Specialities';
 import LearnMore from './Components/LearnMore';
 import Footer from './Components/Footer';
 import VideoCall from "./Components/VideoCall";
+// import Video from "./Components/Video";
 import Navbar from './Components/Navbar';
 import Market from './Components/Market';
 
@@ -144,6 +145,7 @@ function App() {
         <Route path='/Institute' element={<Institution />} />
         <Route path='/LearnMore' element={<LearnMore />} />
         <Route path="/call" element={<VideoCall />} />
+        {/* <Route path="/call" element={<Video />} /> */}
         <Route path='/Market' element={<Market/>}></Route>
       </Routes>
       <specialties/>
