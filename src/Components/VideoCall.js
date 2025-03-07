@@ -113,6 +113,7 @@ const VideoCall = () => {
         try {
           // Use update instead of set to preserve existing data
           await update(appointmentRef, {
+            ...existingData,
             appointmentLink: callLink,
           });
           console.log("Appointment updated with video call link.");
