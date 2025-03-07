@@ -5,7 +5,6 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
   background-attachment: fixed; /* Ensures the image stays fixed when scrolling */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -393,12 +392,12 @@ body::before {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 95%;
+  height: 95%;
   pointer-events: none;
   background: 
-      radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(144, 224, 239, 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, rgba(9, 131, 188, 0.263) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(9, 131, 188, 0.263) 0%, transparent 50%);
   animation: particleMove 20s infinite alternate;
   z-index: -1;
   opacity: 0.5;

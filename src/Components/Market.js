@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { ref, get, set, push } from 'firebase/database';
 import db from '../firebase';
 import '../Styles/Market.css';
+import { useLocation, useNavigate } from "react-router-dom";
+import logo from '../Assets/logo-main.png';
 
 const Market = () => {
   const [nearbyHospitals, setNearbyHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const hospitalId = localStorage.getItem('inscode');
   
   // Function to calculate distance between two coordinates (Haversine formula)
@@ -25,7 +28,7 @@ const Market = () => {
   const deg2rad = (deg) => {
     return deg * (Math.PI/180);
   };
-  
+
   // Format date function
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
@@ -172,8 +175,30 @@ const Market = () => {
   
   return (
     <>
+    
       <div>
-        <div className='marketHeader'><p>Market</p></div>
+        {/* <header className='marketHeader'>
+        <div className='logo-div'>
+                  <img src={logo} className='App-logo' alt='logo' />
+                  <h1>MEDILOG</h1>
+                </div>
+                <h1>Market</h1>
+          
+        </header> */}
+        <header className="institution-header">
+        <div className='logo-div'>
+          <img src={logo} className='App-logo' alt='logo' />
+          <h1>MEDILOG</h1>
+        </div>
+        <div className="institution-header-content">
+          <h1>MARKET</h1>
+        </div>
+        <div>
+        <button className="logout-button"style={{marginRight:'20px'}}  onClick={() => window.history.back()}>
+          Back
+        </button>
+        </div>
+      </header>
         {loading ? (
           <div className='loading'>Loading nearby hospitals...</div>
         ) : nearbyHospitals.length === 0 ? (

@@ -4,7 +4,7 @@
   margin-top: 20px;
   margin-bottom: 24px;
   transform: translateY(20px);
-  background-color: #f8fafc;
+  background-color: #1793d31f;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -199,7 +199,7 @@
     position: relative;
     padding-left: 8rem;
     text-align: left;
-    border-bottom: 1px dashed #e2e8f0;
+    border-bottom: 1px dashed #1793d31f;
   }
   
   .entries p::before {

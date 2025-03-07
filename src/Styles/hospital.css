@@ -5,33 +5,31 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
   padding: 20px;
   position: relative;
   overflow: hidden;
 }
 
+/* 360-degree rotation animation */
 .hospital-auth-container::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 10%, transparent 10.01%);
-  background-size: 20px 20px;
-  opacity: 0.5;
-  animation: moveBackground 20s linear infinite;
-  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: rgba(9, 137, 197, 0.1);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: rotateSquare 20s linear infinite;
   z-index: 1;
 }
 
-@keyframes moveBackground {
+@keyframes rotateSquare {
   from {
-      transform: rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   to {
-      transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
@@ -169,29 +167,6 @@
   animation: fadeIn 0.5s ease;
 }
 
-.hospital-auth-container {
-display: flex;
-justify-content: center;
-align-items: center;
-min-height: 100vh;
-background: linear-gradient(135deg, #f0f4f8, #e2e8f0);
-padding: 20px;
-position: relative;
-overflow: hidden;
-}
-
-.hospital-auth-container::before {
-content: '';
-position: absolute;
-top: 50%;
-left: 50%;
-width: 300px;
-height: 300px;
-background: rgba(14, 165, 233, 0.1);
-transform: translate(-50%, -50%) rotate(0deg);
-animation: rotateSquare 20s linear infinite;
-z-index: 1;
-}
 /* Location button styling */
 .location-button {
   width: 100%;
@@ -221,15 +196,6 @@ z-index: 1;
   margin-top: 10px;
   font-size: 0.9rem;
   color: #dc3545;
-}
-
-@keyframes rotateSquare {
-from {
-    transform: translate(-50%, -50%) rotate(0deg);
-}
-to {
-    transform: translate(-50%, -50%) rotate(360deg);
-}
 }
 
 /* Rest of the existing CSS remains the same */

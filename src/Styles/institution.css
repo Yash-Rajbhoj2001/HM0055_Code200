@@ -102,7 +102,7 @@
 
 /* Doctors Section */
 .doctors-section {
-  background-color: white;
+  background-color: #1793d31f;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 24px;
@@ -381,7 +381,7 @@
 
 /* Predicted Medicine Demand Section */
 .medicinePrediction {
-  background-color: white;
+  background-color: #1793d31f;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 24px;
@@ -438,7 +438,7 @@
 
 /* Predicted Equipment Demand Section */
 .resourcePrediction {
-  background-color: white;
+  background-color: #1793d31f;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 24px;
