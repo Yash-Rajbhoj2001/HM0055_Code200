@@ -201,10 +201,12 @@
 
 /* Resource Management Section */
 .resource-management-section {
+  width: 75.5%;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 24px;
+  margin-left: 170px;
   margin-bottom: 24px;
 }
 
@@ -482,6 +484,70 @@
 .resourcePrediction .predicted-quantity {
   font-weight: 600;
   color: #3182ce;
+}
+.request-button {
+  background-color: #28a745; /* Green */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.request-button:hover {
+  background-color: #218838; /* Darker green */
+}
+
+.delete-button {
+  background-color: #dc3545; /* Red */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darker red */
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .request-button,
+  .delete-button {
+    font-size: 12px; /* Smaller font size for smaller screens */
+    padding: 6px 10px; /* Smaller padding for smaller screens */
+    margin-right: 3px; /* Reduced margin for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .request-button,
+  .delete-button {
+    font-size: 10px; /* Even smaller font size for very small screens */
+    padding: 4px 8px; /* Even smaller padding for very small screens */
+    margin-right: 2px; /* Further reduced margin for very small screens */
+  }
+}
+@media (max-width:500px) {
+  .resource-management-section{
+    margin-left: 20px;
+  }
+  .doctors-section{
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .doctors-grid{
+    align-items: center;
+    justify-content: center;
+  }
+  .Inventory{
+    margin-top: 0px;
+  }
+
 }
 
 /* Responsive design for smaller screens */
