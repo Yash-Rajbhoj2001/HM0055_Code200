@@ -190,7 +190,6 @@ body {
 
 .input-container {
   display: flex;
-  flex-direction: column;
 }
 
 .input-container label {
@@ -203,7 +202,6 @@ body {
 .input-container select {
   padding: 0.65rem;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
   font-size: 1rem;
   outline: none;
   transition: all 0.3s ease;
