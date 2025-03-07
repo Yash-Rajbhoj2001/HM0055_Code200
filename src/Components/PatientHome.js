@@ -302,13 +302,23 @@ const PatientHome = () => {
     };
     
     // Function to handle join call button click
-    const handleJoinCall = (appointmentId,appointLink) => {
-        // Implement your video call logic here
-        console.log(`Joining call for appointment: ${appointmentId}`);
-        // This could redirect to a video call page or launch a modal with the video call
-        navigate(appointLink);
+    const handleJoinCall = (appointmentId, patientId) => {
+        console.log(`Joining call for appointment: ${appointmentId} ${patientId} ${doctorID}`);
         
+        // Make sure doctorID is correctly obtained from the appointment object
+        
+        navigate('/call', {
+            state: {
+                doctorid: doctorID,
+                appointmentId: appointmentId, // Make sure this matches the name in VideoCall.js
+                patientId: patientId,
+                mainid: appointmentId,
+                isPatient: true
+            }
+        });
     };
+      
+      
 
   return (
     <>
@@ -371,23 +381,21 @@ const PatientHome = () => {
                                         <p><strong>Time:</strong> {appointment.time}</p>
                                         
                                         {appointment.type === 'online' && (
-                                            <Link to={appointment?.appointmentLink}>
-                                                <button 
-                                                    onClick={() => handleJoinCall(appointmentId,appointment.appointmentLink)}
-                                                    disabled={enableJoinButton}
-                                                    style={{
-                                                        backgroundColor: enableJoinButton ? '#4CAF50' : '#ccc',
-                                                        color: 'white',
-                                                        padding: '8px 12px',
-                                                        border: 'none',
-                                                        borderRadius: '4px',
-                                                        cursor: enableJoinButton ? 'pointer' : 'not-allowed',
-                                                        marginTop: '10px'
-                                                    }}
-                                                >
-                                                    Join Call
-                                                </button>
-                                            </Link>
+                                            <button 
+                                                onClick={() => handleJoinCall(appointment.id, patient.patientId)} // Assuming userId is the current patient's ID
+                                                disabled={enableJoinButton}
+                                                style={{
+                                                backgroundColor: enableJoinButton ? '#4CAF50' : '#ccc',
+                                                color: 'white',
+                                                padding: '8px 12px',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                                cursor: enableJoinButton ? 'pointer' : 'not-allowed',
+                                                marginTop: '10px'
+                                                }}
+                                            >
+                                                Join Call
+                                            </button>
                                         )}
                                     </div>
                                 );

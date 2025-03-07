@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import db from "../firebase";
-import { set, ref } from "firebase/database";
+import { set, ref,update } from "firebase/database";
 import { useLocation } from "react-router-dom";
 
 // ✅ Add loadScript() here
@@ -31,28 +31,42 @@ const VideoCall = () => {
   useEffect(() => {
     const startCall = async () => {
       // Check if required IDs are present
-      if (!doctorid || !appointmentid || !patientId) {
-        console.error("Missing required IDs (doctorid, appointmentid, patientId).");
+      if (!appointmentid) {
+        console.error("Missing required appointment ID.");
         return;
       }
-
+    
       // Load ZegoUIKitPrebuilt script
       const loaded = await loadScript(
         "https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"
       );
-
+    
       if (!loaded || !window.ZegoUIKitPrebuilt) {
         console.error("Zego UIKit failed to load");
         return;
       }
-
-      // Use appointment ID as the room ID
+    
+      // Use appointment ID as the room ID - make sure it's consistent
       const roomID = appointmentid;
-      const userID = doctorid; // Use doctor ID as the user ID
-      const userName = `Doctor_${doctorid}`; // Set username dynamically
+      
+      // The URL should be constructed the same way for both doctor and patient
+      const callLink = window.location.protocol + "//" + window.location.host + "/call?roomID=" + roomID;
+      
+      const isPatient = location.state?.isPatient;
+        
+      // Set appropriate user ID and name based on who's joining
+      const userID = isPatient ? patientId : doctorid;
+      const userName = isPatient ? `Patient_${patientId}` : `Doctor_${doctorid}`;
+        
+      // Check if we have a valid user ID
+      if (!userID) {
+        console.error("Missing user ID for", isPatient ? "patient" : "doctor");
+        return;
+      }
+    
       const appID = 1463874107; // Replace with your Zego app ID
       const serverSecret = "f6c044784324dca9c6b1f56530bf5ed2"; // Replace with your server secret
-
+    
       // Generate Zego token
       const kitToken = window.ZegoUIKitPrebuilt.generateKitTokenForTest(
         appID,
@@ -61,7 +75,7 @@ const VideoCall = () => {
         userID,
         userName
       );
-
+    
       // Join the room
       const zp = window.ZegoUIKitPrebuilt.create(kitToken);
       zp.joinRoom({
@@ -69,13 +83,14 @@ const VideoCall = () => {
         sharedLinks: [
           {
             name: "Personal link",
-            url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?roomID=" + roomID,
-          }],
-
+            url: callLink,
+          }
+        ],
+    
         scenario: {
           mode: window.ZegoUIKitPrebuilt.VideoConference,
         },
-
+    
         turnOnMicrophoneWhenJoining: true,
         turnOnCameraWhenJoining: true,
         showMyCameraToggleButton: true,
@@ -88,21 +103,25 @@ const VideoCall = () => {
         layout: "Auto",
         showLayoutButton: false,
       });
-
-      // Update the appointment in Firebase with the video call link
-      const appointmentRef = ref(db, `patient/${patientId}/upcomingAppointments/${appointmentid}`);
-      try {
-        await set(appointmentRef, {
-          appointmentLink: window.location.href, // Add the video call link
-        });
-        console.log("Appointment updated with video call link.");
-      } catch (error) {
-        console.error("Failed to update appointment:", error);
+    
+      // Only update appointment link if this is the doctor joining
+      // This prevents multiple updates and ensures the doctor sets the link
+      if (!isPatient && patientId) {
+        const appointmentRef = ref(db, `patient/${patientId}/upcomingAppointments/${appointmentid}`);
+        try {
+          // Use update instead of set to preserve existing data
+          await update(appointmentRef, {
+            appointmentLink: callLink,
+          });
+          console.log("Appointment updated with video call link.");
+        } catch (error) {
+          console.error("Failed to update appointment:", error);
+        }
       }
     };
-
+    
     startCall();
-  }, [doctorid, appointmentid, patientId]);
+  }, [doctorid, appointmentid, patientId, location.state?.isPatient]);
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>

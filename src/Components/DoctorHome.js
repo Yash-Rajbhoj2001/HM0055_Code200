@@ -364,13 +364,19 @@ const DoctorHome = () => {
     };
 
     // Handle join call button click
-    const handleJoinCall = (appointmentId,patientId,mainid) => {
-        // Implement video call navigation/logic here
-        console.log(`Joining call for appointment ${appointmentId}`);
-        // Example: navigate(`/video-call/${appointmentId}`);
+    const handleJoinCall = (appointmentId, patientId, mainid) => {
+        console.log(`Joining call for appointment ${appointmentId} ${patientId} ${mainid}`);
         const doctorid = doctorDetail.doctorid;
-        console.log(doctorid,appointmentId,patientId,doctorID);
-        navigate('/call',{state:{doctorid,appointmentId,patientId,mainid}});
+        console.log(doctorid, appointmentId, patientId); // Removed undefined doctorID
+        navigate('/call', {
+            state: {
+                doctorid,
+                appointmentId,
+                patientId,
+                mainid,
+                isPatient: false // Explicitly mark this as not a patient
+            }
+        });
     };
 
     return (
@@ -692,6 +698,20 @@ const DoctorHome = () => {
                             const isOnlineAppointment = appointment.type === 'online';
                             const canJoin = canJoinAppointment(appointment);
                             
+                            // Format time to Indian time format (12-hour with AM/PM)
+                            let formattedTime = appointment.time;
+                            try {
+                                // Assuming appointment.time is in 24-hour format like "14:30"
+                                const [hours, minutes] = appointment.time.split(':');
+                                const hour = parseInt(hours, 10);
+                                const ampm = hour >= 12 ? 'PM' : 'AM';
+                                const hour12 = hour % 12 || 12; // Convert to 12-hour format
+                                formattedTime = `${hour12}:${minutes} ${ampm}`;
+                            } catch (error) {
+                                console.error("Error formatting time:", error);
+                                // Keep the original format if there's an error
+                            }
+                            
                             // Determine border color based on appointment status
                             let borderColor = '#ddd'; // Default grey
                             if (appointmentStatus === 'expired') {
@@ -709,17 +729,18 @@ const DoctorHome = () => {
                                         position: 'relative'
                                     }}
                                 >
-                                    <p><strong>Appointment ID:</strong> {appointmentId}</p>
+                                    <p><strong>Appointment ID:</strong> {appointment.patientRef}</p>
                                     <p><strong>Patient ID:</strong> {appointment.patientId}</p>
                                     <p><strong>Date:</strong> {appointment.day}</p>
-                                    <p><strong>Time:</strong> {appointment.time}</p>
+                                    <p><strong>Time:</strong> {formattedTime}</p>
                                     <p><strong>Type:</strong> {appointment.type}</p>
+                                    {/* Rest of your code... */}
                                     
                                     {/* Online call button - visible only for online appointments */}
                                     {isOnlineAppointment && (
                                         <button
-                                            onClick={() => handleJoinCall(appointment.patientRef,appointment.patientId,appointment.id)}
-                                            disabled={!canJoin}
+                                            onClick={() => handleJoinCall(appointment.id,appointment.patientId,appointment.id)}
+                                            disabled={canJoin}
                                             style={{
                                                 padding: '6px 12px',
                                                 backgroundColor: canJoin ? '#4CAF50' : '#e0e0e0',
