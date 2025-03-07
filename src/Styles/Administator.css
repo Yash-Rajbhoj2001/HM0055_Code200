@@ -259,3 +259,180 @@
     margin-left: 20px;
   }
 }
+/* Stock Display Button */
+.view-stock {
+  background-color: #3b82f6;
+  margin-left: 10px;
+}
+
+.view-stock:hover {
+  background-color: #2563eb;
+}
+
+/* Stock Container Styles */
+.stock-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.stock-content {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stock-content h3 {
+  color: #0ea5e9;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+.no-stock-message {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Stock Table Styles */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stock-header {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 0.75rem 0;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.stock-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.stock-header p, .stock-row p {
+  margin: 0;
+  padding: 0.5rem;
+  text-align: center;
+  color: #475569;
+}
+
+/* Close Button */
+.close-stock-btn {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #f43f5e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: block;
+  margin-left: auto;
+}
+
+.close-stock-btn:hover {
+  background-color: #e11d48;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .stock-header, .stock-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stock-header {
+    display: none;
+  }
+  
+  .stock-row p {
+    position: relative;
+    padding-left: 8rem;
+    text-align: left;
+    border-bottom: 1px dashed #e2e8f0;
+  }
+  
+  .stock-row p:nth-child(1)::before {
+    content: "Medicine Name:";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  
+  .stock-row p:nth-child(2)::before {
+    content: "Brand:";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  
+  .stock-row p:nth-child(3)::before {
+    content: "Type:";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  
+  .stock-row p:nth-child(4)::before {
+    content: "Quantity:";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  
+  .stock-row p:nth-child(5)::before {
+    content: "Expiry Date:";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  
+  .stock-row p:nth-child(6)::before {
+    content: "Sell Price:";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+  }
+}
+
+@media (max-width: 480px) {
+  .stock-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .view-stock {
+    width: 200px;
+    margin-left: 20px !important;
+    margin-top: 10px;
+  }
+}

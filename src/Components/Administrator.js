@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import db from '../firebase';
-import { ref, set } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 import '../Styles/Administator.css';
 import '../App.css';
 
@@ -8,6 +8,8 @@ const Administrator = () => {
     const [unitType, setUnitType] = useState('quantity');
     const [display, setDisplay] = useState(false);
     const [medicines, setMedicines] = useState([]);
+    const [stockVisible, setStockVisible] = useState(false);
+    const [stockData, setStockData] = useState([]);
     const [medicineData, setMedicineData] = useState({
         name: '',
         brand: '',
@@ -19,7 +21,25 @@ const Administrator = () => {
         sellPrice: ''
     });
 
-    console.log(localStorage.getItem('inscode'));
+    // Function to fetch stock data from Firebase
+    const fetchStockData = async () => {
+        try {
+            const inscode = localStorage.getItem('inscode');
+            const medicineRef = ref(db, `Hospital/${inscode}/medicine`);
+            const snapshot = await get(medicineRef);
+            
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const medicineArray = Object.values(data);
+                setStockData(medicineArray);
+            } else {
+                setStockData([]);
+            }
+        } catch (error) {
+            console.error("Error fetching stock data: ", error);
+        }
+    };
+
     // Function to handle medicine type selection and set unit type
     const checkType = (event) => {
         const selectedType = event.target.value;
@@ -79,16 +99,43 @@ const Administrator = () => {
         }
 
         medicines.forEach((medicine) => {
-            const inscode = localStorage.getItem('inscode');
-            const medicineRef = ref(db, `medicine/${medicine.name}`); // Store under medicine/{medicineName}
-            
+            const inscode = localStorage.getItem("inscode");
+            const medicineRef = ref(db, `Hospital/${inscode}/medicine/${medicine.name}`); // Store under medicine/{medicineName}
+            const stockRef = ref(db, `Hospital/${inscode}/StockReport/${medicine.name}`); // Store stock report under StockReport/{medicineName}
+        
+            const stockData = {
+                addedQuantity: medicine.quantity, // Quantity added
+                remainingQuantity: medicine.quantity, // Initially, remaining = added
+                dateAdded: new Date().toISOString() // Store timestamp
+            };
+        
+            // Upload medicine details
             set(medicineRef, medicine)
-                .then(() => console.log(`Medicine ${medicine.name} uploaded successfully!`))
+                .then(() => {
+                    console.log(`Medicine ${medicine.name} uploaded successfully!`);
+        
+                    // Upload stock report
+                    set(stockRef, stockData)
+                        .then(() => {
+                            console.log(`Stock report updated for ${medicine.name}!`);
+                            fetchStockData(); // Refresh stock data after upload
+                        })
+                        .catch((error) => console.error("Stock report update failed: ", error));
+                })
                 .catch((error) => console.error("Upload failed: ", error));
         });
+        
 
         alert("Medicines uploaded successfully!");
         setMedicines([]); // Clear local medicines after upload
+    };
+
+    // Function to toggle stock display
+    const toggleStockDisplay = () => {
+        if (!stockVisible) {
+            fetchStockData();
+        }
+        setStockVisible(!stockVisible);
     };
 
     return (
@@ -124,7 +171,44 @@ const Administrator = () => {
 
                 <button className="Add-entry" onClick={() => setDisplay(true)}>Add Medicine Entry</button>
                 <button className="Add-entry" style={{ marginLeft: '10px' }} onClick={uploadToFirebase}>Update</button>
+                <button className="Add-entry view-stock" onClick={toggleStockDisplay}>
+                    {stockVisible ? 'Hide Current Stock' : 'View Current Stock'}
+                </button>
             </div>
+
+            {stockVisible && (
+                <div className='stock-container'>
+                    <div className='stock-content'>
+                        <h3>Current Medicine Stock</h3>
+                        {stockData.length === 0 ? (
+                            <p className="no-stock-message">No medicines in stock</p>
+                        ) : (
+                            <div className="stock-table">
+                                <div className='stock-header'>
+                                    <p>Medicine Name</p>
+                                    <p>Brand</p>
+                                    <p>Type</p>
+                                    <p>Quantity</p>
+                                    <p>Expiry Date</p>
+                                    <p>Sell Price</p>
+                                </div>
+                                {stockData.map((med, index) => (
+                                    <div className='stock-row' key={index}>
+                                        <p>{med.name}</p>
+                                        <p>{med.brand}</p>
+                                        <p>{med.type}</p>
+                                        <p>{med.quantity} {med.type === 'Tablet' || med.type === 'Capsule' ? 'mg' : 
+                                             med.type === 'Syrup' || med.type === 'Injection' ? 'ml' : 'quantity'}</p>
+                                        <p>{med.expiryDate}</p>
+                                        <p>{med.sellPrice}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <button className="close-stock-btn" onClick={toggleStockDisplay}>Close</button>
+                    </div>
+                </div>
+            )}
 
             {display && (
                 <div className='medicine-form-container'>
