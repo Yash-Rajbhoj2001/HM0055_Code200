@@ -14,6 +14,15 @@ const Footer = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Ensures footer updates immediately after login/logout
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUserType(localStorage.getItem('userType'));
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleProfileClick = () => {
     const email = localStorage.getItem('userEmail');
     if (userType === 'doctor') {

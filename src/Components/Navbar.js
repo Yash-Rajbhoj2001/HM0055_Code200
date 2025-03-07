@@ -13,8 +13,22 @@ function Navbar() {
       setIsLoggedIn(!!localStorage.getItem("userEmail"));
       setUserType(localStorage.getItem("userType"));
     };
+
     window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  // New effect to check login status every 500ms
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsLoggedIn(!!localStorage.getItem("userEmail"));
+      setUserType(localStorage.getItem("userType"));
+    }, 500); 
+
+    return () => clearInterval(interval);
   }, []);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
