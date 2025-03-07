@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ref, get, onValue } from "firebase/database";
+import { ref, get, onValue,set } from "firebase/database";
 import db, { auth } from "../firebase";
 import "../Styles/institution.css";
 import Admin from "./Admin";
@@ -11,6 +11,9 @@ import logo from '../Assets/logo-main.png';
 const Institute = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [predictedStock, setPredictedStock] = useState([]);
+  const [predictedResources, setPredictedResources] = useState([]);
+
   
   // Get hospital code from location state
   const hospitalCode = location.state?.foundHospitalCode;
@@ -26,6 +29,93 @@ const Institute = () => {
       navigate("/");
       return;
     }
+  
+    const fetchHospitalData = async () => {
+      try {
+        // Get hospital data
+        const hospitalRef = ref(db, `Hospital/${hospitalCode}`);
+        onValue(hospitalRef, (snapshot) => {
+          if (snapshot.exists()) {
+            setHospitalData(snapshot.val());
+            // Call this function when needed (e.g., on dashboard load)
+            checkEquipmentAndPredict(); 
+          } else {
+            setError("Hospital not found");
+            navigate("/");
+          }
+        });
+  
+        // Get doctors associated with this hospital
+        const hospitalDoctorsRef = ref(db, `Hospital/${hospitalCode}/Doctor`);
+        onValue(hospitalDoctorsRef, async (snapshot) => {
+          if (snapshot.exists()) {
+            const doctorIds = snapshot.val();
+            const doctorPromises = Object.values(doctorIds).map(async (doctorId) => {
+              const doctorRef = ref(db, `doctor/${doctorId}`);
+              const doctorSnapshot = await get(doctorRef);
+              if (doctorSnapshot.exists()) {
+                return { id: doctorId, ...doctorSnapshot.val() };
+              }
+              return null;
+            });
+  
+            const doctorsList = await Promise.all(doctorPromises);
+            setDoctors(doctorsList.filter(doctor => doctor !== null));
+          }
+          setLoading(false);
+        }, {
+          onError: (error) => {
+            console.error("Error fetching doctors:", error);
+            setLoading(false);
+            // If no doctors are found, just continue with empty array
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
+        setLoading(false);
+      }
+    };
+  
+    fetchHospitalData();
+  
+    // Check authentication
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate("/");
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [hospitalCode, navigate]);
+  
+  useEffect(() => {
+    const fetchPredictions = async () => {
+        try {
+            const predictedRef = ref(db, `Hospital/${hospitalCode}/PredictedStock`);
+            const snapshot = await get(predictedRef);
+
+            if (snapshot.exists()) {
+                setPredictedStock(snapshot.val().predictions || []);
+            } else {
+                console.warn("No predicted stock data available.");
+            }
+        } catch (error) {
+            console.error("Error fetching predicted stock:", error);
+        }
+    };
+
+    fetchPredictions();
+}, [hospitalCode]);
+
+
+  useEffect(() => {
+    // Redirect if no hospital code is found
+    if (!hospitalCode) {
+      navigate("/");
+      return;
+    }
+    
 
     const fetchHospitalData = async () => {
       try {
@@ -34,6 +124,8 @@ const Institute = () => {
         onValue(hospitalRef, (snapshot) => {
           if (snapshot.exists()) {
             setHospitalData(snapshot.val());
+            // Call this function when needed (e.g., on dashboard load)
+            checkStockAndPredict(); 
           } else {
             setError("Hospital not found");
             navigate("/");
@@ -83,6 +175,266 @@ const Institute = () => {
 
     return () => unsubscribe();
   }, [hospitalCode, navigate]);
+
+  const predictMedicineDemand = async (hospitalCode) => {
+    try {
+        const stockRef = ref(db, `Hospital/${hospitalCode}/StockReport`);
+        const stockSnapshot = await get(stockRef);
+
+        if (!stockSnapshot.exists()) {
+            console.warn("No stock data available.");
+            return;
+        }
+
+        const stockData = stockSnapshot.val();
+        const currentDate = new Date();
+
+        let medicineUsage = [];
+
+        for (const [medicineName, data] of Object.entries(stockData)) {
+            if (!data.dateAdded || !data.remainingQuantity || !data.addedQuantity) {
+                console.warn(`Missing data for ${medicineName}`);
+                continue;
+            }
+
+            const purchaseDate = new Date(data.dateAdded);
+            const daysPassed = Math.max((currentDate - purchaseDate) / (1000 * 60 * 60 * 24), 1);
+            const dailyUsage = (data.addedQuantity - data.remainingQuantity) / daysPassed;
+
+            medicineUsage.push({
+                name: medicineName,
+                dailyUsage: dailyUsage.toFixed(2),
+                remainingStock: data.remainingQuantity,
+            });
+        }
+
+        if (medicineUsage.length === 0) {
+            console.warn("No valid medicine usage data available.");
+            return;
+        }
+
+        // **Improved AI Prompt**
+        const aiPrompt = `
+        Analyze the medicine stock trends and predict future demand for the next 30 days.
+        Ensure the response is **strictly** valid JSON with this structure:
+        {
+            "predictions": [
+                { "medicine": "Medicine Name", "predictedQuantity": 50 },
+                { "medicine": "Another Medicine", "predictedQuantity": 20 }
+            ]
+        }
+        Do not include any explanations or extra text.
+        Here is the medicine usage data:
+        ${JSON.stringify(medicineUsage, null, 2)}
+        `;
+
+        // Call Google Gemini API
+        const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBMuRcsjTaJXsZ01MtRZh8yHtVXmUuMSw",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ role: "user", parts: [{ text: aiPrompt }] }]
+                })
+            }
+        );
+
+        const data = await response.json();
+        if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            throw new Error("No prediction received from Gemini.");
+        }
+
+        // **Ensure Safe JSON Parsing**
+        let rawResponse = data.candidates[0].content.parts[0].text;
+
+        // **Fix Possible Invalid Formatting**
+        rawResponse = rawResponse.replace(/```json|```/g, '').trim(); // Remove Markdown JSON formatting if present
+
+        let predictedStock;
+        try {
+            predictedStock = JSON.parse(rawResponse);
+        } catch (jsonError) {
+            console.error("Invalid JSON response from Gemini:", rawResponse);
+            throw new Error("Gemini response is not valid JSON.");
+        }
+
+        // **Fallback: Ensure Predictions Exist**
+        if (!predictedStock.predictions || predictedStock.predictions.length === 0) {
+            console.warn("No valid predictions from Gemini. Generating fallback predictions.");
+            predictedStock = {
+                predictions: medicineUsage.map((med) => ({
+                    medicine: med.name,
+                    predictedQuantity: Math.max(Math.ceil(med.dailyUsage * 30), 1), // Rough estimate
+                })),
+            };
+        }
+
+        // Store predictions in Firebase
+        const predictedRef = ref(db, `Hospital/${hospitalCode}/PredictedStock`);
+        await set(predictedRef, predictedStock);
+
+        console.log("Predicted stock updated:", predictedStock);
+        return predictedStock;
+
+    } catch (error) {
+        console.error("Error predicting medicine demand:", error);
+        return null;
+    }
+};
+
+
+
+  const checkStockAndPredict = async () => {
+    const inscode = localStorage.getItem("inscode");
+    const predictions = await predictMedicineDemand(inscode);
+
+    if (!predictions) return;
+
+    const lowStockMedicines = Object.entries(predictions).filter(([_, qty]) => qty < 5); // Example: Alert for low stock
+
+    if (lowStockMedicines.length > 0) {
+        alert(`⚠️ Low stock alert for: ${lowStockMedicines.map(([name]) => name).join(", ")}`);
+    }
+};
+
+const predictEquipmentDemand = async (hospitalCode) => {
+  try {
+    const resourcesRef = ref(db, `Hospital/${hospitalCode}/Resources`);
+    const snapshot = await get(resourcesRef);
+
+    if (!snapshot.exists()) {
+      console.warn("No resource data available.");
+      setPredictedResources([]); // Set to empty array if no data
+      return;
+    }
+
+    const resourcesData = snapshot.val();
+    const currentDate = new Date();
+
+    let resourceUsage = [];
+
+    for (const [resourceId, data] of Object.entries(resourcesData)) {
+      if (!data.dateAdded || !data.quantity || !data.condition) {
+        console.warn(`Missing data for resource ${resourceId}`);
+        continue;
+      }
+
+      const addedDate = new Date(data.dateAdded);
+      const daysPassed = Math.max((currentDate - addedDate) / (1000 * 60 * 60 * 24), 1);
+      const dailyUsage = data.quantity / daysPassed; // Simplified usage calculation
+
+      resourceUsage.push({
+        id: resourceId,
+        name: data.name,
+        dailyUsage: dailyUsage.toFixed(2),
+        remainingQuantity: data.quantity,
+        condition: data.condition,
+      });
+    }
+
+    if (resourceUsage.length === 0) {
+      console.warn("No valid resource usage data available.");
+      setPredictedResources([]); // Set to empty array if no valid data
+      return;
+    }
+
+    const aiPrompt = `
+    Analyze the medical equipment and resource usage trends and predict future demand for the next 30 days.
+    Ensure the response is **strictly** valid JSON with this structure:
+    {
+        "predictions": [
+            { "resource": "Resource Name", "predictedQuantity": 50 },
+            { "resource": "Another Resource", "predictedQuantity": 20 }
+        ]
+    }
+    Do not include any explanations or extra text.
+    Here is the resource usage data:
+    ${JSON.stringify(resourceUsage, null, 2)}
+    `;
+
+    // Call Google Gemini API
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBMuRcsjTaJXsZ01MtRZh8yHtVXmUuMSw",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: aiPrompt }] }]
+        })
+      }
+    );
+
+    const data = await response.json();
+    if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      throw new Error("No prediction received from Gemini.");
+    }
+
+    // **Ensure Safe JSON Parsing**
+    let rawResponse = data.candidates[0].content.parts[0].text;
+
+    // **Fix Possible Invalid Formatting**
+    rawResponse = rawResponse.replace(/```json|```/g, '').trim(); // Remove Markdown JSON formatting if present
+
+    let predictedResources;
+    try {
+      predictedResources = JSON.parse(rawResponse);
+    } catch (jsonError) {
+      console.error("Invalid JSON response from Gemini:", rawResponse);
+      throw new Error("Gemini response is not valid JSON.");
+    }
+
+    // **Fallback: Ensure Predictions Exist**
+    if (!predictedResources.predictions || predictedResources.predictions.length === 0) {
+      console.warn("No valid predictions from Gemini. Generating fallback predictions.");
+      predictedResources = {
+        predictions: resourceUsage.map((res) => ({
+          resource: res.name,
+          predictedQuantity: Math.max(Math.ceil(res.dailyUsage * 30), 1), // Rough estimate
+        })),
+      };
+    }
+
+    // Store predictions in Firebase
+    const predictedRef = ref(db, `Hospital/${hospitalCode}/PredictedResources`);
+    await set(predictedRef, predictedResources);
+
+    // Update state with predicted resources
+    setPredictedResources(predictedResources.predictions);
+
+    console.log("Predicted resources updated:", predictedResources);
+    return predictedResources;
+
+  } catch (error) {
+    console.error("Error predicting resource demand:", error);
+    setPredictedResources([]); // Set to empty array on error
+    return null;
+  }
+};
+
+const checkEquipmentAndPredict = async () => {
+  const inscode = localStorage.getItem("inscode");
+  
+  // Predict medicine demand
+  const medicinePredictions = await predictMedicineDemand(inscode);
+  if (medicinePredictions) {
+    const lowStockMedicines = Object.entries(medicinePredictions).filter(([_, qty]) => qty < 5); // Example: Alert for low stock
+    if (lowStockMedicines.length > 0) {
+      alert(`⚠️ Low stock alert for: ${lowStockMedicines.map(([name]) => name).join(", ")}`);
+    }
+  }
+
+  // Predict equipment demand
+  const equipmentPredictions = await predictEquipmentDemand(inscode);
+  if (equipmentPredictions) {
+    const lowStockResources = Object.entries(equipmentPredictions).filter(([_, qty]) => qty < 5); // Example: Alert for low stock
+    if (lowStockResources.length > 0) {
+      alert(`⚠️ Low stock alert for resources: ${lowStockResources.map(([name]) => name).join(", ")}`);
+    }
+  }
+};
+
+
 
   const handleLogout = () => {
     auth.signOut();
@@ -179,7 +531,63 @@ const Institute = () => {
       <div style={{paddingBottom:'20px'}}>
             <Admin/>
             <Administrator/>
+      </div>
+      <div className="ResourcePrediction">
+          <div className="medicinePrediction">
+              <div className="prediction-container">
+                <h2 className="prediction-title">📊Predicted Medicine Demand</h2>
+                {predictedStock.length === 0 ? (
+                    <p className="text-gray-600 text-center">No predictions available.</p>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="prediction-table">
+                            <thead>
+                                <tr>
+                                    <th>Medicine Name</th>
+                                    <th>Predicted Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {predictedStock.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.medicine}</td>
+                                        <td className="predicted-quantity">{item.predictedQuantity}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+          </div>
+      </div>
+      <div className="resourcePrediction">
+        <div className="prediction-container">
+          <h2 className="prediction-title">📊 Predicted Equipment Demand</h2>
+          {predictedResources?.length === 0 ? (
+            <p className="text-gray-600">No predictions available.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="prediction-table">
+                <thead>
+                  <tr>
+                    <th>Resource Name</th>
+                    <th>Predicted Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(predictedResources || []).map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.resource}</td>
+                      <td className="predicted-quantity">{item.predictedQuantity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
+      </div>
     </div>
   );
 };
