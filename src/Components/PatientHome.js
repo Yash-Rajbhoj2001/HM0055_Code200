@@ -6,6 +6,9 @@ import db from '../firebase';
 import { get,ref, update } from 'firebase/database';
 import Notification from './Notification';
 import { Link } from 'react-router-dom';
+import Tesseract from 'tesseract.js';
+
+
 const PatientHome = () => {
     const location = useLocation();
     const [showToast, setShowToast] = useState(false);
@@ -27,6 +30,7 @@ const PatientHome = () => {
     const [userType,setUserType] = useState(true);//true for doctor and false for patient
     const [appointments, setAppointments] = useState([]);
     const [appointmentToDisplay,setAppointmentsToDisplay] = useState({});
+    const [aiExplaination,setAiExplaination] = useState('');
 
     
 
@@ -189,11 +193,70 @@ const PatientHome = () => {
         }
     };
 
-    const showAppointment = (appointmentDetail) => {
-        document.getElementById('Appointment-Display').style.display = 'flex';
+    const extractTextFromImage = async (imageURL) => {
+        const { data: { text } } = await Tesseract.recognize(imageURL, 'eng');
+        return text;
+    };
+    
+    const generateAIExplanation = async (doctorNote, reportImage, medicines) => {
+        try {
+            // Extract text from report image using OCR
+            const extractedText = await extractTextFromImage(reportImage);
+    
+            // Call Google Gemini API
+            const response = await fetch(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBMuRcsjTaJXsZ01MtRZh8yHtVXmUuMSw",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [
+                            {
+                                role: "user",
+                                parts: [
+                                    { text: `Doctor's Note: ${doctorNote}\nExtracted Report Text: ${extractedText}\nPrescribed Medicines: ${JSON.stringify(medicines)}\nExplain this in simple medical terms for a patient.` }
+                                ]
+                            }
+                        ]
+                    })
+                }
+            );
+    
+            const data = await response.json();
+    
+            // Ensure the response is valid
+            if (!data || !data.candidates || data.candidates.length === 0) {
+                throw new Error("No response from Gemini API");
+            }
+    
+            return data.candidates[0].content.parts[0].text;
+        } catch (error) {
+            console.error("Error generating AI explanation:", error);
+            return "Unable to generate explanation.";
+        }
+    };
+    
+    const showAppointment = async (appointmentDetail) => {
+        document.getElementById("Appointment-Display").style.display = "flex";
         setAppointmentsToDisplay(appointmentDetail);
+    
         console.log(appointmentDetail);
-    }
+    
+        // Extract medicine names from appointmentDetail.medicines
+        const medicineNames = Object.keys(appointmentDetail.medicines).join(", ");
+    
+        // Fetch AI explanation with extracted medicine names
+        const data = await generateAIExplanation(
+            appointmentDetail.doctorNote,
+            appointmentDetail.file,
+            medicineNames
+        );
+    
+        console.log("Generated AI Explanation:", data);
+        setAiExplaination(data); // Set explanation in state
+    };
+    
+    
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
             .then(() => {
@@ -444,6 +507,35 @@ const PatientHome = () => {
                             <p>No prescriptions available</p>
                         )}
                     </div>
+                    {aiExplaination && typeof aiExplaination === "string" && (
+    <div style={{ 
+        backgroundColor: "#f9f9f9", 
+        padding: "15px", 
+        borderRadius: "10px", 
+        marginTop: "10px", 
+        lineHeight: "1.6" 
+    }}>
+        {aiExplaination
+            .toString() // Ensure it's a string
+            .split("\n") // Split into lines
+            .map((line, index) => {
+                if (line.startsWith("**") && line.endsWith("**")) {
+                    // Bold headings
+                    return <h3 key={index} style={{ color: "#333" }}>{line.replace(/\*\*/g, "")}</h3>;
+                } else if (line.startsWith("*")) {
+                    // Bulleted list for key points
+                    return <ul key={index} style={{ marginLeft: "20px" }}>
+                        <li>{line.replace(/\*/g, "")}</li>
+                    </ul>;
+                } else if (line.trim() !== "") {
+                    // Normal paragraph text
+                    return <p key={index} style={{ color: "#555" }}>{line}</p>;
+                }
+                return null;
+            })}
+    </div>
+)}
+
                 </div>
             </div>
         
