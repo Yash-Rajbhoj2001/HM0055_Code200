@@ -824,7 +824,7 @@ const displayErrorNotification = (message) => {
             <Admin/>
             <Administrator/>
       </div>
-      <div className="ResourcePrediction">
+      <div className="ResourcePrediction" style={{display:'flex',justifyContent:'center'}}>
           <div className="medicinePrediction">
               <div className="prediction-container">
                 <h2 className="prediction-title">Predicted Medicine Demand</h2>
@@ -869,47 +869,47 @@ const displayErrorNotification = (message) => {
           </div>
       </div>
       <div className="resourcePrediction">
-  <div className="prediction-container">
-    <h2 className="prediction-title">Predicted Equipment Demand</h2>
-    {predictedResources?.length === 0 ? ( // Use optional chaining
-      <p className="text-gray-600 text-center">No predictions available.</p>
-    ) : (
-      <div className="overflow-x-auto">
-        <table className="prediction-table">
-        <thead>
-          <tr>
-            <th>Resource Name</th>
-            <th>Predicted Quantity</th>
-            <th>Actions</th> {/* New column for buttons */}
-          </tr>
-        </thead>
-        <tbody>
-          {(predictedResources || []).map((item, index) => (
-            <tr key={index}>
-              <td>{item.resource}</td>
-              <td className="predicted-quantity">{item.predictedQuantity}</td>
-              <td>
-                <button 
-                  className="request-button"
-                  onClick={() => handleRequest(item.resource, item.predictedQuantity)}
-                >
-                  Request
-                </button>
-                <button 
-                  className="delete-button"
-                  onClick={() => handleDelete(item.resource)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <div className="prediction-container">
+          <h2 className="prediction-title">Predicted Equipment Demand</h2>
+          {predictedResources?.length === 0 ? ( // Use optional chaining
+            <p className="text-gray-600 text-center">No predictions available.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="prediction-table">
+              <thead>
+                <tr>
+                  <th>Resource Name</th>
+                  <th>Predicted Quantity</th>
+                  <th>Actions</th> {/* New column for buttons */}
+                </tr>
+              </thead>
+              <tbody>
+                {(predictedResources || []).map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.resource}</td>
+                    <td className="predicted-quantity">{item.predictedQuantity}</td>
+                    <td>
+                      <button 
+                        className="request-button"
+                        onClick={() => handleRequest(item.resource, item.predictedQuantity)}
+                      >
+                        Request
+                      </button>
+                      <button 
+                        className="delete-button"
+                        onClick={() => handleDelete(item.resource)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            </div>
+          )}
+        </div>
       </div>
-    )}
-  </div>
-</div>
     </div>
   );
 };

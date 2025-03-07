@@ -456,6 +456,7 @@
 
 /* Predicted Medicine Demand Section */
 .medicinePrediction {
+  width: 75.5%;
   background-color: #1793d31f;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -513,11 +514,12 @@
 
 /* Predicted Equipment Demand Section */
 .resourcePrediction {
-  background-color: #1793d31f;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 24px;
   margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
 }
 
 .resourcePrediction .prediction-title {
@@ -528,6 +530,7 @@
 
 .resourcePrediction .prediction-container {
   background-color: #f9fafb;
+  width: 80%;
   padding: 20px;
   border-radius: 8px;
 }
@@ -573,7 +576,18 @@
   position: relative;
   overflow: hidden;
 }
-
+.delete-button{
+  background-color: #c82333; /* Green */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
 .request-button::before {
   content: '';
   position: absolute;
@@ -587,6 +601,9 @@
 
 .request-button:hover::before {
   left: 100%;
+}
+.Add-entry:nth-of-type(2){
+  margin-left: 10px;
 }
 
 .request-button:hover {
@@ -657,6 +674,16 @@
   }
   .Inventory{
     margin-top: 0px;
+    margin: 0px;
+    margin-left: 20px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  .medicine-form{
+    transform: scale(0.7);
+  }
+  .medicine-input-cont input{
+    width: 80%;
   }
 
 }
@@ -683,8 +710,8 @@
   }
 
   .resource-management-section {
-    width: 100%;
-    margin-left: 0;
+    width: 80%;
+    margin-left: 20px;
   }
 
   .doctors-grid {
