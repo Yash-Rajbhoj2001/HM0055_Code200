@@ -145,7 +145,7 @@ const Home = () => {
                 <CountUp  start = {100} end={patientCount + 200 } duration={4} />+
               <h3>Total Patients Visited</h3>
               </div>
-              <p>Connecting patients to better health through MediLog's innovative platform.</p>
+              <p>Empowering better care through seamless patient engagement and real-time health tracking.</p>
             </motion.div>
 
 
@@ -157,7 +157,7 @@ const Home = () => {
             >
               <span className="icon">🔒</span>
               <h3>Secure & Compliant</h3>
-              <p>Ensuring data privacy and compliance with healthcare regulations through advanced encryption.</p>
+              <p>Ensuring safe and reliable supply chain operations with real-time tracking and compliance to medical logistics standards, securing sensitive supply and distribution data.</p>
             </motion.div>
 
             <motion.div 
@@ -168,7 +168,7 @@ const Home = () => {
             >
               <span className="icon">⏳</span>
               <h3>Efficient Record Management</h3>
-              <p>Quick access to medical records, prescriptions, and reports, reducing paperwork and saving time.</p>
+              <p>Streamlining stock handling and delivery workflows, ensuring quick restocking, optimized dispatches, and minimal paperwork to keep hospitals always prepared.</p>
             </motion.div>
 
             <motion.div
