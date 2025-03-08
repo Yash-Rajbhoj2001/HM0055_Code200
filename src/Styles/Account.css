@@ -127,6 +127,7 @@
 
 .input-container {
   display: flex;
+  flex-direction: column;
 }
 
 /* Disease list styling */
