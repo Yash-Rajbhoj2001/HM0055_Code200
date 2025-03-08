@@ -35,13 +35,13 @@ Here are some screenshots showcasing the MEDILOG platform:
 
 **🔹 Appointment Dashboard **  
 
-![Appointment Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/appointment-scheduling.png)   
+![Appointment Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/appointment.png)   
 
 **🔹 Doctor Dashboard**  
 ![Doctor Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/Doctor_dashboard.png)  
 
 **🔹 Patient Dashboard**  
-![Patient Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/patientdetail.png)  
+![Patient Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/patient.png)  
 
 **🔹 Inventory Management**  
 ![Inventory Management](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/Inventory.png)  
