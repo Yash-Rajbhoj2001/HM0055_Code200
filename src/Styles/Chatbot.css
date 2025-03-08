@@ -149,7 +149,7 @@
 /* Chat input area */
 .chat-input {
   padding: 12px;
-  background-color: white;
+  background-color: #0f6ca1;
   display: flex;
   align-items: center;
   border-top: 1px solid #e0e0e0;
