@@ -11,6 +11,7 @@ const HospitalHome = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
+  const [wrd,setWard] = useState("");
   const [password, setPassword] = useState("");
   const [hospitalName, setHospitalName] = useState("");
   const [phone, setPhone] = useState("");
@@ -67,6 +68,7 @@ const HospitalHome = () => {
             latitude: location.latitude,
             longitude: location.longitude,
           },
+          wrd,
         });
         
         // Navigate to Institute with hospital code in state
@@ -168,6 +170,18 @@ const HospitalHome = () => {
               placeholder="Enter password"
             />
           </div>
+
+          {isRegistering &&
+            <div className="form-group">
+              <label>Number of Wards</label>
+              <input
+                type="number"
+                value={wrd}
+                onChange={(e) => setWard(e.target.value)}
+                placeholder="Number of Wards"
+              />
+            </div>
+          }
 
           {isRegistering && (
             <div className="form-group">

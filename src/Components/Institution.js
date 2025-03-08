@@ -37,6 +37,11 @@ const Institute = () => {
   const [viewMode, setViewMode] = useState('received');
 
 
+  useEffect(()=>{
+    checkStockAndPredict(); 
+    checkEquipmentAndPredict();
+  },[newResource])
+
   useEffect(() => {
     if (hospitalCode) {
       const grantedTokensRef = ref(db, `Hospital/${hospitalCode}/GrantedToken`);
@@ -423,7 +428,7 @@ const Institute = () => {
       try {
         // **Simplified AI Prompt**
         const aiPrompt = `
-        Analyze this medical equipment data and predict quantities needed for 30 days.
+        Analyze this medical equipment data and predict quantities needed for 1 days if the number of ward in the hospital are equal to ${hospitalData?.wrd}.
         Return only valid JSON in this format:
         {"predictions":[{"resource":"Name","predictedQuantity":50}]}
         Data: ${JSON.stringify(resourceUsage, null, 2)}

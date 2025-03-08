@@ -335,6 +335,8 @@ const PatientHome = () => {
                     <p>Name : {patient.firstname} {patient.lastname}</p>
                     <p>Contact : {patient.contact}</p>
                     <p>Email : {patient.email}</p>
+                    <p>Age: {patient?.age}</p>
+                    {patient?.gender &&<p>Gender: {patient?.gender}</p>}
                     <div className='diseases'>
                         <p>Disease :</p> 
                         {Array.isArray(patient.disease) && patient.disease.length > 0 ? (
@@ -453,7 +455,51 @@ const PatientHome = () => {
                                 ) : (
                                     <option>Other</option>
                                 )}
-                                <option>Other</option>
+                                <option>Cancer</option>
+                                <option>Diabetes</option>
+                                <option>Heart Disease</option>
+                                <option>Stroke</option>
+                                <option>Alzheimer's Disease</option>
+                                <option>Parkinson's Disease</option>
+                                <option>Asthma</option>
+                                <option>Arthritis</option>
+                                <option>Hypertension</option>
+                                <option>Obesity</option>
+                                <option>Tuberculosis</option>
+                                <option>HIV/AIDS</option>
+                                <option>COVID-19</option>
+                                <option>Influenza</option>
+                                <option>Pneumonia</option>
+                                <option>Hepatitis</option>
+                                <option>Kidney Disease</option>
+                                <option>Liver Disease</option>
+                                <option>Epilepsy</option>
+                                <option>Multiple Sclerosis</option>
+                                <option>Sickle Cell Disease</option>
+                                <option>Cystic Fibrosis</option>
+                                <option>Dengue</option>
+                                <option>Malaria</option>
+                                <option>Cholera</option>
+                                <option>Typhoid</option>
+                                <option>Leprosy</option>
+                                <option>Lupus</option>
+                                <option>Psoriasis</option>
+                                <option>Gout</option>
+                                <option>Endometriosis</option>
+                                <option>Osteoporosis</option>
+                                <option>Migraine</option>
+                                <option>Depression</option>
+                                <option>Anxiety Disorder</option>
+                                <option>Schizophrenia</option>
+                                <option>Bipolar Disorder</option>
+                                <option>Autism Spectrum Disorder</option>
+                                <option>ADHD</option>
+                                <option>Glaucoma</option>
+                                <option>Cataracts</option>
+                                <option>Conjunctivitis</option>
+                                <option>Measles</option>
+                                <option>Mumps</option>
+                                <option>Rubella</option>
                             </select>
                             <label>Upload Reports</label>
                             <label htmlFor="reports" className="reports-label">
