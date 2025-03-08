@@ -40,7 +40,7 @@
 .contact-heading {
   font-weight: bold;
   font-size: 42px;
-  color: #0ea5e9;
+  color: #0f6ca1;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
 }
@@ -85,7 +85,7 @@
 }
 
 .contact-btn {
-  background-color: #0ea5e9;
+  background-color: #0f6ca1;
   color: white;
   padding: 15px 30px;
   border: none;
