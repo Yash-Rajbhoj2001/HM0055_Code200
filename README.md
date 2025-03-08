@@ -31,20 +31,27 @@ MEDILOG is a web-based platform designed to streamline the interaction between d
 Here are some screenshots showcasing the MEDILOG platform:  
 
 **🔹 Home Dashboard**  
-![Hospital Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/Home.png)  
+![Hospital Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/Home.png.png)  
 
-**🔹 Appointment Dashboard**  
+**🔹 Appointment Dashboard 1**  
 
-![Appointment Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/appointment.png)  
+![Appointment Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/patientappointment1.png)  
+
+**🔹 Appointment Dashboard 2**  
+
+![Appointment Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/patientappointment2.png)  
 
 **🔹 Doctor Dashboard**  
-![Doctor Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/Doctor_dashboard.png)  
+![Doctor Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/doctorddetail.png)  
 
 **🔹 Patient Dashboard**  
-![Patient Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/patient.png)  
+![Patient Dashboard](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/patientdetail.png)  
 
 **🔹 Inventory Management**  
 ![Inventory Management](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/Inventory.png)  
+
+**🔹 Market **  
+![Inventory Management](https://github.com/aadim112/HM0055_Code200/blob/main/src/Assets/market.png)  
 
 
 ---
