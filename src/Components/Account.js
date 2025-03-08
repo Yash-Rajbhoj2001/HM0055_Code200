@@ -529,12 +529,12 @@ const Account = () => {
                                                     <option>Mumps</option>
                                                     <option>Rubella</option>
                                                 </select>
-                                                <button onClick={addDisease}>Add</button>
+                                                <button onClick={addDisease} style={{width:'100px'}}>Add</button>
                                                 <div className="disease-list">
                                                     {diseaselist.map((disease, index) => (
                                                         <div key={index} className="disease-item">
                                                             {disease}
-                                                            <button onClick={() => removeDisease(disease)}>Remove</button>
+                                                            <button onClick={() => removeDisease(disease)}>❌</button>
                                                         </div>
                                                     ))}
                                                 </div>
