@@ -388,6 +388,8 @@ const DoctorHome = () => {
                     <p>Name: {doctorDetail.firstname} {doctorDetail.lastname}</p>
                     <p>Contact: {doctorDetail.contact}</p>
                     <p>Email: {doctorId}</p>
+                    <p>Age: {doctorDetail?.age}</p>
+                    {doctorDetail?.gender &&<p>Gender: {doctorDetail?.gender}</p>}
                     <p>Specialisation: {doctorDetail.specialisation}</p>
                     
                     {/* New Appointment Availability Button */}

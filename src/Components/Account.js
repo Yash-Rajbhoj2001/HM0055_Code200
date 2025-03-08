@@ -380,6 +380,10 @@ const Account = () => {
                                             <input type='text' placeholder='Hospital ID' name='hospitalId' onChange={handleChange} required />
                                         </div>
                                         <div className='input-container'>
+                                            <label>Certificate Number</label>
+                                            <input type='text' placeholder='Certificate Number' name='CertificateNumber' onChange={handleChange} required />
+                                        </div>
+                                        <div className='input-container'>
                                             <label>Specialiesd In*</label>
                                             <select name='specialisation' onChange={handleChange}>
                                                 <option value="">Select Specialization</option>

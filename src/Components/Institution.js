@@ -32,6 +32,121 @@ const Institute = () => {
     nextMaintenance: ""
   });
   const [showResourceForm, setShowResourceForm] = useState(false);
+
+  const [grantedTokens, setGrantedTokens] = useState([]);
+  const [viewMode, setViewMode] = useState('received');
+
+
+  useEffect(()=>{
+    checkStockAndPredict(); 
+    checkEquipmentAndPredict();
+  },[newResource])
+
+  useEffect(() => {
+    if (hospitalCode) {
+      const grantedTokensRef = ref(db, `Hospital/${hospitalCode}/GrantedToken`);
+      onValue(grantedTokensRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const tokensData = snapshot.val();
+          const tokensList = Object.entries(tokensData).map(([id, data]) => ({
+            id,
+            ...data,
+            // Add a flag to determine if this hospital is the sender or receiver
+            isSender: data.hasOwnProperty('toHospitalId')
+          }));
+          setGrantedTokens(tokensList);
+        } else {
+          setGrantedTokens([]);
+        }
+      });
+    }
+  }, [hospitalCode]);
+
+  const updateTokenStatus = async (tokenId, isSent) => {
+    try {
+      const tokenRef = ref(db, `Hospital/${hospitalCode}/GrantedToken/${tokenId}`);
+      await set(tokenRef, {
+        ...grantedTokens.find(token => token.id === tokenId),
+        status: 'completed'
+      });
+      alert(`Token marked as ${isSent ? 'sent' : 'received'} successfully!`);
+    } catch (error) {
+      console.error("Error updating token status:", error);
+      alert("Failed to update status. Please try again.");
+    }
+  };
+
+  const renderRequestsSection = () => {
+    return (
+      <div className="requests-section">
+        <div className="section-header">
+          <h2>Requests</h2>
+          <div className="view-toggle">
+            <button 
+              className={`toggle-button ${viewMode === 'received' ? 'active' : ''}`}
+              onClick={() => setViewMode('received')}
+            >
+              Received
+            </button>
+            <button 
+              className={`toggle-button ${viewMode === 'sent' ? 'active' : ''}`}
+              onClick={() => setViewMode('sent')}
+            >
+              Sent
+            </button>
+          </div>
+        </div>
+  
+        {grantedTokens.length === 0 ? (
+          <div className="no-tokens-message">
+            <p>No {viewMode} requests available.</p>
+          </div>
+        ) : (
+          <div className="tokens-table-container">
+            <table className="tokens-table">
+              <thead>
+                <tr>
+                  <th>{viewMode === 'sent' ? 'To Hospital' : 'From Hospital'}</th>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                  <th>Timestamp</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {grantedTokens
+                  .filter(token => (viewMode === 'sent' ? token.isSender : !token.isSender))
+                  .map((token) => (
+                    <tr key={token.id}>
+                      <td>{viewMode === 'sent' ? token.toHospitalId : token.fromHospitalId}</td>
+                      <td>{token.productName}</td>
+                      <td>{token.quantity}</td>
+                      <td>
+                        <span className={`status-badge ${token.status}`}>
+                          {token.status}
+                        </span>
+                      </td>
+                      <td>{new Date(token.timestamp).toLocaleString()}</td>
+                      <td>
+                        {token.status !== 'completed' && (
+                          <button 
+                            className="action-button"
+                            onClick={() => updateTokenStatus(token.id, viewMode === 'sent')}
+                          >
+                            {viewMode === 'sent' ? 'Mark as Sent' : 'Mark as Received'}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    );
+  };
   
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -313,7 +428,7 @@ const Institute = () => {
       try {
         // **Simplified AI Prompt**
         const aiPrompt = `
-        Analyze this medical equipment data and predict quantities needed for 30 days.
+        Analyze this medical equipment data and predict quantities needed for 1 days if the number of ward in the hospital are equal to ${hospitalData?.wrd}.
         Return only valid JSON in this format:
         {"predictions":[{"resource":"Name","predictedQuantity":50}]}
         Data: ${JSON.stringify(resourceUsage, null, 2)}
@@ -661,7 +776,6 @@ const displayErrorNotification = (message) => {
             </div>
           </div>
         </div>
-
         <div className="doctors-section">
           <div className="doctors-header">
             <h2>Doctors</h2>
@@ -692,7 +806,7 @@ const displayErrorNotification = (message) => {
           )}
         </div>
       </div>
-
+      {renderRequestsSection()}
       {/* Resource Management Section */}
       <div className="resource-management-section">
         <div className="resource-header">
